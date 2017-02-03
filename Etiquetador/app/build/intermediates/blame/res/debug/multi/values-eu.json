@@ -1,0 +1,83 @@
+[
+    {
+        "outputFile": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\incremental\\mergeDebugResources\\merged.dir\\values-eu\\values-eu.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 63,
+                    "endOffset": 114
+                },
+                "from": {
+                    "file": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\exploded-aar\\com.journeyapps\\zxing-android-embedded\\3.0.2\\res\\values-eu\\values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 195,
+                        "endColumn": 63,
+                        "endOffset": 254
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 119,
+                    "endColumn": 48,
+                    "endOffset": 163
+                },
+                "from": {
+                    "file": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\exploded-aar\\com.journeyapps\\zxing-android-embedded\\3.0.2\\res\\values-eu\\values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 259,
+                        "endColumn": 48,
+                        "endOffset": 303
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 168,
+                    "endColumn": 147,
+                    "endOffset": 311
+                },
+                "from": {
+                    "file": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\exploded-aar\\com.journeyapps\\zxing-android-embedded\\3.0.2\\res\\values-eu\\values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 308,
+                        "endColumn": 147,
+                        "endOffset": 451
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 316,
+                    "endColumn": 111,
+                    "endOffset": 423
+                },
+                "from": {
+                    "file": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\exploded-aar\\com.journeyapps\\zxing-android-embedded\\3.0.2\\res\\values-eu\\values.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 456,
+                        "endColumn": 111,
+                        "endOffset": 563
+                    }
+                }
+            }
+        ]
+    }
+]

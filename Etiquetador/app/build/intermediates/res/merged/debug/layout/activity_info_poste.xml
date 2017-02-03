@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+android:paddingRight="@dimen/activity_horizontal_margin"
+android:paddingTop="@dimen/activity_vertical_margin"
+android:paddingBottom="@dimen/activity_vertical_margin"
+tools:context="com.trimble.etiquetador.InfoPoste">
+
+    <TextView
+        android:text="Cables registrados en el poste"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView9"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true" />
+
+    <TextView
+        android:text="Número de cables"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView10"
+        android:layout_alignBottom="@+id/viewncable"
+        android:layout_alignParentLeft="true" />
+
+    <EditText
+        android:imeOptions="actionDone"
+        android:onClick="enableBlink"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="number"
+        android:ems="2"
+        android:cursorVisible="false"
+        android:layout_marginTop="22dp"
+        android:id="@+id/viewncable"
+        android:layout_below="@+id/viewsector"
+        android:layout_toRightOf="@+id/textView10"
+        android:layout_marginLeft="19dp" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewcodigo"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true" />
+
+    <TextView
+        android:text="TextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewsector"
+        android:layout_marginTop="17dp"
+        android:layout_below="@+id/viewcodigo"
+        android:layout_alignParentRight="true" />
+
+    <Button
+        android:text="Guardar"
+        android:onClick="modifyNCable"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/guardar"
+        android:layout_alignBaseline="@+id/textView10"
+        android:layout_alignBottom="@+id/textView10"
+        android:layout_alignParentRight="true" />
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="200dip"
+        android:id="@+id/listacables"
+        android:layout_marginTop="36dp"
+        android:layout_below="@+id/guardar"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:text="Regresar"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:onClick="regresarListadoPostes"
+        android:id="@+id/button5"
+        android:layout_alignBaseline="@+id/boton"
+        android:layout_alignBottom="@+id/boton"
+        android:layout_alignParentLeft="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Finalizar"
+        android:id="@+id/fin"
+        android:onClick="returnListaPoste"
+        android:layout_alignBaseline="@+id/boton"
+        android:layout_alignBottom="@+id/boton"
+        android:layout_alignParentRight="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:text="Agregar"
+        android:id="@+id/boton"
+        android:layout_below="@+id/listacables"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="18dp" />
+
+    <!--
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="xx"
+        android:freezesText="true"
+        android:id="@+id/txtCode"
+        android:layout_below="@+id/button"
+        android:layout_centerHorizontal="true" />
+      -->
+</RelativeLayout>
