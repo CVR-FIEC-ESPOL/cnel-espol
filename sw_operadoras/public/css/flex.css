@@ -1,0 +1,51 @@
+/*Flexbox Support*/
+
+.row-flex{
+	display: flex;
+	flex-direction:row;
+}
+
+.column-flex{
+	display: flex;
+	flex-direction:column;
+}
+
+.align-items-center{
+	align-items:center;
+}
+
+.justify-content-center{
+	justify-content:center;
+}
+
+.align-items-stretch{
+	align-items:stretch;
+}
+
+.flex-grow-1{
+	flex-grow: 1;
+}
+
+.flex-grow-3{
+	flex-grow: 3;
+}
+
+.align-items-end{
+	align-items:flex-end;
+}
+
+.justify-content-end{
+	justify-content:flex-end;
+}
+
+.flex-wrap{
+	flex-wrap:wrap;
+}
+
+.justify-content-space-around{
+	justify-content:space-around;
+}
+
+.justify-content-space-between{
+	justify-content:space-between;
+}

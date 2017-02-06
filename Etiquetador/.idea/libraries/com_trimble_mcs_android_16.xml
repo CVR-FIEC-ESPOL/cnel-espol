@@ -1,0 +1,9 @@
+<component name="libraryTable">
+  <library name="com.trimble.mcs-android-16">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/AppData/Local/Android/Sdk/add-ons/addon-trimble_mcs_apis_4_1-trimble_navigation_limited-16/libs/com.trimble.mcs.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

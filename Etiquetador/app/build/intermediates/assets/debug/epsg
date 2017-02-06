@@ -1,0 +1,2 @@
+# WGS 84 / UTM zone 17S
+<32717> +proj=utm +zone=17 +south +datum=WGS84 +units=m +no_defs  <>
