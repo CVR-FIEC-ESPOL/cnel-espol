@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.trimble.etiquetador"
+    android:versionCode="1"
+    android:versionName="1.0">
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="16" />
+
+    <uses-permission android:name="com.trimble.mcs.permission.ACCESS_FLASHLIGHT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="Etiquetador">
+        <uses-library
+            android:name="com.trimble.mcs"
+            android:required="true" />
+
+        <uses-permission android:name="android.permission.CAMERA" />
+
+        <activity
+            android:name=".Login"
+            android:label="Etiquetador">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".ListadoPostes" />
+        <activity android:name=".Menu" />
+        <activity android:name=".AddPoste" />
+        <activity
+            android:name=".InfoPoste"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name=".CaptureActivityPortrait" />
+        <activity android:name=".ConfirmationActivity" />
+        <activity android:name=".RegistrarCable" />
+        <activity android:name=".PostesPendientes" />
+        <activity android:name=".RegistrarPoste" />
+        <activity android:name=".ListadoRepetidos"></activity>
+    </application>
+
+</manifest>

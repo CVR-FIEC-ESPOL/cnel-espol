@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.trimble.etiquetador"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk
+        android:minSdkVersion="16"
+        android:targetSdkVersion="16" />
+
+    <uses-permission android:name="com.trimble.mcs.permission.ACCESS_FLASHLIGHT" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_GPS" />
+    <uses-permission android:name="android.permission.ACCESS_LOCATION" />
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- Don't require camera, as this requires a rear camera. This allows it to work on the Nexus 7 -->
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.front"
+        android:required="false" /> <!-- TODO replace above two with next line after Android 4.2 -->
+    <!-- <uses-feature android:name="android.hardware.camera.any"/> -->
+    <uses-feature
+        android:name="android.hardware.camera.autofocus"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.camera.flash"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.screen.landscape"
+        android:required="false" />
+    <uses-feature
+        android:name="android.hardware.wifi"
+        android:required="false" />
+
+    <application
+        android:name="com.android.tools.fd.runtime.BootstrapApplication"
+        android:allowBackup="true"
+        android:icon="@drawable/ic_launcher"
+        android:label="Etiquetador" >
+        <uses-library
+            android:name="com.trimble.mcs"
+            android:required="true" />
+
+        <uses-permission android:name="android.permission.CAMERA" />
+
+        <activity
+            android:name="com.trimble.etiquetador.Login"
+            android:label="Etiquetador" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="com.trimble.etiquetador.ListadoPostes" />
+        <activity android:name="com.trimble.etiquetador.Menu" />
+        <activity android:name="com.trimble.etiquetador.AddPoste" />
+        <activity
+            android:name="com.trimble.etiquetador.InfoPoste"
+            android:windowSoftInputMode="stateHidden" />
+        <activity android:name="com.trimble.etiquetador.CaptureActivityPortrait" />
+        <activity android:name="com.trimble.etiquetador.ConfirmationActivity" />
+        <activity android:name="com.trimble.etiquetador.RegistrarCable" />
+        <activity android:name="com.trimble.etiquetador.PostesPendientes" />
+        <activity android:name="com.trimble.etiquetador.RegistrarPoste" />
+        <activity android:name="com.trimble.etiquetador.ListadoRepetidos" />
+        <activity
+            android:name="com.journeyapps.barcodescanner.CaptureActivity"
+            android:clearTaskOnLaunch="true"
+            android:screenOrientation="sensorLandscape"
+            android:stateNotNeeded="true"
+            android:theme="@style/zxing_CaptureTheme"
+            android:windowSoftInputMode="stateAlwaysHidden" />
+    </application>
+
+</manifest>

@@ -1,0 +1,62 @@
+[
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_login.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_login.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\zxing_capture.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\exploded-aar\\com.journeyapps\\zxing-android-embedded\\3.0.2\\res\\layout\\zxing_capture.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_registrar_poste.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_registrar_poste.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_info_poste.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_info_poste.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_listado_repetidos.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_listado_repetidos.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_menu.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_menu.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_registrar_cable.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_registrar_cable.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_postes_pendientes.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_postes_pendientes.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_any_orientation_capture.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_any_orientation_capture.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_confirmation.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_confirmation.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\poste_item.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\poste_item.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_listado_postes.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_listado_postes.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\cable_item.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\cable_item.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\zxing_barcode_scanner.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\exploded-aar\\com.journeyapps\\zxing-android-embedded\\3.0.2\\res\\layout\\zxing_barcode_scanner.xml"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\layout\\activity_add_poste.xml",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\layout\\activity_add_poste.xml"
+    }
+]
