@@ -4,6 +4,95 @@ var fs = require("fs");
 var oracledb = require('oracledb');
 var _ = require('underscore');
 var q = require('q');
+var bodyParser = require('body-parser');
+
+app.use( bodyParser.json() );
+//app.use( bodyParser.text() );
+//app.use( bodyParser.urlencoded({extended: false}) );
+
+
+/* decodeBase64Image(<base64 string>)
+ * Decodes a base-64 image
+ * Adapted from:
+ *   http://stackoverflow.com/questions/20267939/nodejs-write-base64-image-file
+ */
+function decodeBase64Image(dataString) 
+{
+   var matches = dataString.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+   var response = {};
+
+   if (!matches || matches.length !== 3) 
+   {
+      return new Error('Invalid base64 header');
+   }
+
+   var types = matches[1].match(/\/(.+)$/);
+   response.type = types[1];
+   response.data = Buffer.from(matches[2], 'base64');
+
+   return response;
+}
+
+function promiseWriteFile(prefix, objectid, photo, previousVal) {
+   let deferred = q.defer();
+
+   let b64obj = decodeBase64Image(photo);
+   if (b64obj instanceof Error) {
+      deferred.reject({"code": "B64",
+                       "erro": b64obj,
+                       "prevsucc": previousVal});
+   } else {
+      let fname = prefix + objectid + '.' + b64obj.type;
+      fs.writeFile(
+         fname, b64obj.data,
+         function(err) {
+            if (err) {
+               let emsg = 'Error writing image file ' + fname + ': ' + err;
+               deferred.reject({"code": prefix,
+                                "erro": new Error(emsg),
+                                "prevsucc": previousVal});
+            } else {
+               resobj = {"prefix": prefix, "fname": fname};
+               if (previousVal)
+                  deferred.resolve([previousVal, resobj]);
+               else
+                  deferred.resolve([resobj]);
+            }
+         });
+   }
+   return deferred.promise;
+}
+
+app.post('/poste/extras', function(req, res) {
+   var spid = req.body.spid;
+   var objectid = req.body.objectid;
+   var ncables = req.body.ncables;
+
+   //let promisePOS = promiseWriteFile('POS', objectid, req.body.fotoposte);
+   //let promiseCAB = promiseWriteFile('CAB', objectid, req.body.fotocables);
+   let promise =
+      promiseWriteFile('POS', objectid, req.body.fotoposte, null).then(
+         function(val) {
+            return promiseWriteFile('CAB', objectid, req.body.fotocables, val);
+         });
+
+   //q.all([promisePOS, promiseCAB]).then(
+   promise.then(
+      function(val) {
+         console.log('eeexito... value: ' + val);
+         res.end();
+      },
+      function(errobj) {
+         if (errobj.prevsucc) {
+            console.log('A borrar ' + errobj.prevsucc[0].fname);
+            fs.unlinkSync(errobj.prevsucc[0].fname);
+         }
+         res.status(500);
+         res.send(errobj.erro);
+         res.end();
+         console.log('errorcito.. value: ' + errobj.erro);
+      });
+})
 
 app.get('/poste/codigo/:codigo', function(req, res) {
    get_poste(res, "observacio = '" + req.params.codigo + "'");
