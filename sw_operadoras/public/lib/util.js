@@ -17,6 +17,7 @@ Util.prototype.getDistanceFromLocations = function (lat1,lon1,lat2,lon2) {
     ; 
   var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a)); 
   var d = R * c; // Distance in km
-  return d;
+  var d_m = d*1000;//Distancia en m
+  return d_m;
 }
 

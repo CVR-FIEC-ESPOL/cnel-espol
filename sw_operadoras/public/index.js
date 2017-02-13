@@ -26,11 +26,10 @@ google.maps.event.addDomListener(window, 'load', function(){
   google.maps.event.addListenerOnce(map,"bounds_changed",function() {
     var bounding_box = get_current_bounds();
     
-    pole_data_manager = new PoleDataManager(bounding_box);
+    pole_data_manager = new PoleDataManager(bounding_box);//instancia pole_data_manager con las coordenas actuales
 
     pole_data_manager.download().then(function(response){
-      var locations = parse_poles(response);
-      add_layer(locations);
+      add_layer(parse_poles(response));
       pole_data_manager.restore();
     },function(err){
       console.log(err);
@@ -38,23 +37,18 @@ google.maps.event.addDomListener(window, 'load', function(){
 
     drawer = new PolygonDrawer(map);
     drawer.add_observer(pole_data_manager);
-  
   });
 
   google.maps.event.addListener(map,'dragend',function(){
-     var bounding_box = get_current_bounds();
-     var poles_id = null;
-     if(drawer){
-        drawer.remove_observers();
-        pole_data_manager = new PoleDataManager(bounding_box);
-        pole_data_manager.download().then(function(response){
-          var locations = parse_poles(response);
-          add_layer(locations);
-          pole_data_manager.restore();
-        },function(err){
-          console.log(err);
-        });
-        drawer.add_observer(pole_data_manager);
+    if(pole_data_manager!=null){
+      var bounding_box = get_current_bounds();//nuevo bounding box
+      pole_data_manager.set_bounding_box(bounding_box);//establece nuevo bounding box 
+      pole_data_manager.download().then(function(response){//descarga datos dentro del nuevo bounding box
+        add_layer(parse_poles(response));
+        pole_data_manager.restore();//carga datos marcados desde session storage
+      },function(err){
+        console.log(err);
+      });
     }
   })
 
@@ -88,6 +82,9 @@ function parse_poles(response){
 
 function add_layer(locations){
   pole_overlay = new PoleOverlay(map, { 'bounds': bounds }, locations);
-  pole_overlay.observable.remove_observers();
-  pole_overlay.observable.add_observer(pole_data_manager);
+
+  pole_data_manager.set_layer(pole_overlay);
+
+  //pole_overlay.observable.remove_observers();
+  //pole_overlay.observable.add_observer(pole_data_manager);
 }

@@ -5,7 +5,9 @@ var PoleOverlay = function(map,cfg,data){
 	this.data = data;
   this.setMap(map);
   this.initialize(cfg || {});
-  this.observable = new Observable();
+  
+  //this.observable = new Observable();
+
 };
 
 PoleOverlay.prototype = new google.maps.OverlayView();
@@ -13,7 +15,7 @@ PoleOverlay.prototype = new google.maps.OverlayView();
 PoleOverlay.prototype.initialize = function(cfg){
 	this.cfg = cfg;
 	//this.bounds_ = cfg.bounds;
-
+  this.svg = null
   var map = this.map = this.getMap();
   var container = this.container = document.createElement('div');
   var mapDiv = map.getDiv();
@@ -102,7 +104,26 @@ PoleOverlay.prototype.project = function(topLeft,data){
 	return latLngPoints;
 }
 
-PoleOverlay.prototype.draw_points = function(tweets,scale){
+PoleOverlay.prototype.draw_pole = function(object_id){
+  //console.log(this.svg.select('#object_id')[0]);
+  d3.selectAll("circle").each( function(d, i){
+    if(d.value['object_id'] == object_id){
+      d3.select(this).attr({ fill: "blue", r: 5 });
+    }
+  });
+}
+
+PoleOverlay.prototype.delete_pole = function(object_id){
+  //console.log(this.svg.select('#object_id')[0]);
+  d3.selectAll("circle").each( function(d, i){
+    if(d.value['object_id'] == object_id){
+      d3.select(this).attr({ fill: "#ff6961", r: 5 });
+    }
+  });
+}
+
+
+PoleOverlay.prototype.draw_points = function(scale){
 	//var svg_element = document.createElementNS('http://www.w3.org/2000/svg','svg');
 	//svg_element.setAttribute("id","mysvg");
   $('#my-container').remove();
@@ -121,7 +142,7 @@ PoleOverlay.prototype.draw_points = function(tweets,scale){
     ne.x += padding;
     ne.y -= padding;
 
-  var svg = d3.select(this.getPanes().overlayMouseTarget).append("div")
+  this.svg = d3.select(this.getPanes().overlayLayer).append("div")
   .attr('id','my-container')
   .append("svg")
   .attr("class", "locations")
@@ -134,12 +155,11 @@ PoleOverlay.prototype.draw_points = function(tweets,scale){
   .style('left',sw.x+'px')
   .style('top',ne.y+'px');
 
-  svg.selectAll("circle")
+  this.svg.selectAll("circle")
     .data(d3.entries(this.data))
     .enter().append("circle")
-    .on("click", function(d) {
-      that.observable.notify({ 'click': d.value });
-      d3.select(this).attr({ fill: "blue", r: 5 });
+    .attr("data-id",function(pole){
+      return pole.value['object_id'];
     })
     .attr("class", "marker")
     .attr('cx',function(d) {

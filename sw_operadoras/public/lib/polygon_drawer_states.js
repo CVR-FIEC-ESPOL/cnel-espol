@@ -8,15 +8,31 @@ SingleMarker.prototype.do_action = function(context){
 	var map = context.map;
 	var self = this;
 
-	this.handler = google.maps.event.addListener(map, 'mouseup', function(e) {
-		
-		/*context.notify({'location': e.latLng});*/
-
+	this.handler = google.maps.event.addListener(map, 'click', function(e) {
+		context.notify({ 'simple_marker_location': { 'lat': e.latLng.lat(),'lng':e.latLng.lng() } });
 	});
 }
 
 SingleMarker.prototype.change = function(){
-	$("#"+this.btn_id).attr('class','btn btn-success');
+	$("#"+this.btn_id).attr('class','btn btn-primary');
+}
+
+var RemoverSingleMarker = function(){
+	this.btn_id = "remove_selected_pole";
+}
+
+RemoverSingleMarker.prototype.do_action = function(context){
+	$("#"+this.btn_id).attr('class','btn btn-danger');
+	var map = context.map;
+	var self = this;
+
+	this.handler = google.maps.event.addListener(map, 'click', function(e) {
+		context.notify({ 'disable_marker_location': { 'lat': e.latLng.lat(),'lng':e.latLng.lng() } });
+	});
+}
+
+RemoverSingleMarker.prototype.change = function(){
+	$("#"+this.btn_id).attr('class','btn btn-primary');
 }
 
 var MarkerVertex = function(){
@@ -37,8 +53,6 @@ MarkerVertex.prototype.do_action = function(context){
 		var location = e.latLng;
 		self.context.add_data_point(location);  	
 		var circle = new google.maps.Circle(this.points_reference_cfg);
-		//circle.setCenter(location);
-		//circle.setMap(this.map);
 		var marker = new google.maps.Marker({
 	        position: location,
 	        map: map
@@ -54,7 +68,7 @@ MarkerVertex.prototype.change = function(){
 	}
 	this.reference_points = []
 	google.maps.event.removeListener(this.handler);
-	$("#"+this.btn_id).attr('class','btn btn-success');
+	$("#"+this.btn_id).attr('class','btn btn-primary');
 }
 
 var PolygonLinker = function(){
@@ -65,9 +79,11 @@ var PolygonLinker = function(){
 PolygonLinker.prototype.do_action = function(context){
 	var data_points = context.data_points;
 	var map = context.map;
+	var self = this;
 	$("#"+this.btn_id).attr('class','btn btn-danger');
 
 	if(data_points.length<2){
+		alert("No ha marcado puntos para formar el polígono");
 		return;
 	}
 	
@@ -78,78 +94,35 @@ PolygonLinker.prototype.do_action = function(context){
       strokeWeight: 3,
       fillColor: '#0000FF',
       fillOpacity: 0.35,
-      editable: false,
-      draggable: false
+      draggable: false,
+      editable: true
     });
     this.region.setMap(map);
 
     context.data_points = []
     context.region = this.region;
+
+    google.maps.event.addListener(this.region.getPath(), "set_at", function(){
+		context.notify({'region': self.region});
+	});
+
+	google.maps.event.addListener(this.region.getPath(), "insert_at", function(){
+		context.notify({'region': self.region});
+	});
+
+	/*
+	google.maps.event.addListener(this.region, "dragend", function(){
+		self.region = self.region;
+		context.notify({'region_has_changed': self.region});
+	});*/
+	
 	context.notify({'region':this.region});
 }
 
 PolygonLinker.prototype.change = function(){
-	this.region = null;
-	$("#"+this.btn_id).attr('class','btn btn-success');
-}
-
-var DragerPolygon = function(){
-	this.region = null;
-	this.btn_id = "drag_polygon";
-}
-
-DragerPolygon.prototype.do_action = function(context){
-	var self = this;
-
-	$("#"+this.btn_id).attr('class','btn btn-danger');
-	
-	this.region = context.region;
-
-	if(!this.region){
-		return
+	if(this.region){
+		this.region.setMap(null);
+		this.region = null;
 	}
-	this.region.setDraggable(true);
-	
-	google.maps.event.addListener(this.region.getPath(), "dragend", function(){
-		self.region.setOptions({
-			strokeColor: '#0000FF',
-			fillColor: '#0000FF'
-		})
-	});
-
-	this.region.setOptions({
-		strokeColor: '#FF0000',
-		fillColor: '#FF0000'
-	});
-}
-
-DragerPolygon.prototype.change = function(){
-	$("#"+this.btn_id).attr('class','btn btn-success');
-	if(!this.region){
-		return
-	}
-	this.region.setDraggable(false);
-}
-
-
-var EditorPolygon = function(){
-	this.region = null;
-	this.btn_id = "edit_polygon";
-}
-
-EditorPolygon.prototype.do_action = function(context){
-	this.region = context.region;
-	$("#"+this.btn_id).attr('class','btn btn-danger');
-	if(!this.region){
-		return
-	}
-	this.region.setEditable(true);
-}
-
-EditorPolygon.prototype.change = function(){
-	$("#"+this.btn_id).attr('class','btn btn-success');
-	if(!this.region){
-		return
-	}
-	this.region.setEditable(false);
+	$("#"+this.btn_id).attr('class','btn btn-primary');
 }

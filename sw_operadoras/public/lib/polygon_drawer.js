@@ -22,10 +22,10 @@ var PolygonDrawer = function(map){
   	$("#remove_polygon").attr('disabled','disabled');
 
   	$("#select_pole").click(this.on_select_pole.bind(this));
+  	$("#remove_selected_pole").click(this.remove_selected_pole.bind(this));
+
   	$("#active_drawing").click(this.on_active_drawing.bind(this));
   	$("#draw_polygon" ).click(this.on_draw_polygon.bind(this));
-  	$("#drag_polygon").click(this.on_drag_polygon.bind(this));
-  	$("#edit_polygon").click(this.on_edit_polygon.bind(this));
 
   	$("#search_poles" ).click(this.on_search_poles.bind(this));
   	$("#remove_polygon" ).click(this.on_remove_polygon.bind(this));
@@ -51,6 +51,12 @@ PolygonDrawer.prototype.on_select_pole = function(){
 	this.state.do_action(this);
 }
 
+PolygonDrawer.prototype.remove_selected_pole = function(){
+	var current_state = new RemoverSingleMarker();
+	this.set_state(current_state);
+	this.state.do_action(this);
+}
+
 PolygonDrawer.prototype.on_active_drawing = function(){
 	var current_state = new MarkerVertex();
 	this.set_state(current_state);
@@ -59,18 +65,6 @@ PolygonDrawer.prototype.on_active_drawing = function(){
 
 PolygonDrawer.prototype.on_draw_polygon = function(){
 	var current_state = new PolygonLinker();
-	this.set_state(current_state);
-	this.state.do_action(this);
-}
-
-PolygonDrawer.prototype.on_drag_polygon = function(){
-	var current_state = new DragerPolygon();
-	this.set_state(current_state);
-	this.state.do_action(this);
-}
-
-PolygonDrawer.prototype.on_edit_polygon = function(){
-	var current_state = new EditorPolygon();
 	this.set_state(current_state);
 	this.state.do_action(this);
 }
