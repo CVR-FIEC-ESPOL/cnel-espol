@@ -4,12 +4,12 @@ var jsonfile = require('jsonfile');
 var request = require('request');
 var Promise = require('promise');
 
-var clustering = require('density-clustering');
-
 jsonfile.spaces = 4;
 
 // Use connect method to connect to the Server 
 app.use(express.static('./public'));
+app.use(express.static('./public/img'));
+
 
 app.get('/', function (req, res) {
 	res.sendfile('index.html');
@@ -62,7 +62,6 @@ app.get("/get_tags",function(req,res){
 app.get('/get_poles',function(req,res){
 	var boundingbox = req.query['bounding_box'];
 	var end_point = "/bb/" + boundingbox['min_lat'] + "%" + boundingbox['min_lng'] + "%" + boundingbox['max_lat'] + "%" + boundingbox['max_lng'];
-	//console.log(end_point);
 	request('http://localhost:6050' + end_point, function (error, response, body) {
   		if (!error && response.statusCode == 200) {
     		res.json(JSON.parse(body));

@@ -24,7 +24,7 @@
   </head>
   <body>
     <div class="row row-flex">
-      <div class="panel-container col-xs-3 col-sm-3 col-md-3">
+      <div class="panel-container col-xs-4 col-sm-4 col-md-4">
         <div class="pole-title row-flex justify-content-center" >
           <h1>Lista de postes</h1> 
         </div>
@@ -42,18 +42,22 @@
       <div class="map-container col-xs-9 col-sm-9 col-md-9">
           <div class="map-options floating-panel col-md-12 row-flex align-items-center justify-content-center">
 
-            <button id="select_pole" type="submit" class="btn btn-danger">
-              <span  class="glyphicon glyphicon-map-marker"></span>
+            <button id="select_pole" type="submit" class="btn btn-danger row-flex align-items-center">
+              <label title="Seleccione el poste en donde desea registrar un tag" class="select_pole_icon"></label>
             </button>
-
-            <button id="active_drawing" type="submit" class="btn btn-success">
-              <span title="Ubique puntos en el mapa para dibujar un poligono" class="glyphicon glyphicon-screenshot"></span>
-            </button>
-
-            <button id="draw_polygon" type="submit" class="btn btn-success">
-              <span title="Una los puntos que ha dibujado sobre el mapa" class="glyphicon-vector-path-polygon"></span>
+            <button id="remove_selected_pole" type="submit" class="btn btn-primary">
+              <label title="Desmarque un poste registrado" class="remove_selected_pole_icon"></label>
             </button>
             
+            <button id="active_drawing" type="submit" class="btn btn-primary">
+              <label title="Ubique puntos en el mapa para dibujar un poligono" class="active_drawing_icon"></label>
+            </button>
+
+            <button id="draw_polygon" type="submit" class="btn btn-primary" disable >
+              <label title="Una los puntos que ha dibujado sobre el mapa" class="polygon_drawer_icon"  ></label>
+            </button>
+            
+            <!--
             <button id="drag_polygon" type="submit" class="btn btn-success" disabled="">
               <span title="Arrastre el poligono que ha dibujado sobre el mapa" class="glyphicon glyphicon-move"></span>
             </button>
@@ -67,7 +71,7 @@
             </button>
             <button id="search_poles" type="submit" class="btn btn-success">
               <span title="Obtenga información de los postes que estan dentro del poligono que ha dibujado" class="glyphicon glyphicon-search"></span>
-            </button>
+            </button>-->
           </div>
           <div id = "map" class="map-canvas col-md-12">
           </div>
@@ -83,7 +87,7 @@
           <!--<div class="modal-body">
           </div>-->
           <div class="modal-footer">
-            <button id="btn_send_message" type="button" class="btn btn-primary">
+            <button id="btn_mark_tags" type="button" class="btn btn-primary">
               Aceptar
             </button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">

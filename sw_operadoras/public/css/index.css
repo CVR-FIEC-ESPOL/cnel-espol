@@ -5,8 +5,40 @@ html, body {
   font: 14px "Helvetica Neue",Arial,Helvetica,sans-serif;
 }
 
-img{
+button{
+  padding: 5px;
+}
 
+.select_pole_icon{
+  background-image: url("../img/select_pole.png");
+  background-size: cover;
+  height: 40px;
+  width: 40px;
+  margin: 0px;
+}
+
+.remove_selected_pole_icon{
+  background-image: url("../img/remove_selected_pole.png");
+  background-size: cover;
+  height: 40px;
+  width: 40px;
+  margin: 0px;
+}
+
+.active_drawing_icon{
+  background-image: url("../img/active_draw_polygon.png");
+  background-size: cover;
+  height: 40px;
+  width: 40px;
+  margin: 0px;
+}
+
+.polygon_drawer_icon{
+  background-image: url("../img/polygon_drawer.png");
+  background-size: cover;
+  height: 40px;
+  width: 40px;
+  margin: 0px;
 }
 
 .floating-panel {
@@ -144,4 +176,12 @@ h3{
 
 .list-group-item{
   padding: 5px;
+}
+
+.map-marker-drawer-options{
+  border: 1px solid;
+}
+
+.map-polygon-drawer-options{
+
 }
