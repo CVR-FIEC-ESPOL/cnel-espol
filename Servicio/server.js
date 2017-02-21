@@ -171,25 +171,13 @@ function promiseAuth(req)
    return deferred.promise;
 }
 
-app.get('/poste/codigo/:codigo', function(req, res)
+function execIfAuth(req, res, callback)
 {
-   get_poste(req, res, "observacio = '" + req.params.codigo + "'");
-})
-
-app.get('/poste/oid/:objectid', function(req, res)
-{
-   get_poste(req, res, "objectid = " + req.params.objectid);
-})
-
-function get_poste(req, res, sql_clause)
-{
-   let promise = promiseAuth(req);
-   promise.then(
+   promiseAuth(req).then(
       function(val)
       {
          if (val == 'ok') {
-            let p = promiseGetPoste(sql_clause);
-            p.then(
+            callback(req).then(
                function(rows) {
                   console.log(rows);
                   res.end( JSON.stringify(rows) );
@@ -209,6 +197,20 @@ function get_poste(req, res, sql_clause)
          res.end(err);
       });
 }
+
+app.get('/poste/codigo/:codigo', function(req, res)
+{
+   execIfAuth(req, res, function(request) {
+      return promiseGetPoste("observacio = '" + request.params.codigo + "'");
+   });
+})
+
+app.get('/poste/oid/:objectid', function(req, res)
+{
+   execIfAuth(req, res, function(request) {
+      return promiseGetPoste("objectid = " + req.params.objectid);
+   });
+})
 
 function promiseGetPoste(sql_clause)
 {
@@ -264,7 +266,18 @@ function promiseGetPoste(sql_clause)
 }
 
 app.get('/bb/:lat1,:long1,:lat2,:long2', function(req, res) {
+   execIfAuth(req, res, function(request) {
+            let wgs84_code = '32717';
+            let gmap_latlon_code = '8307';
+            return promiseGetBB(request.params.lat1, request.params.long1,
+                                request.params.lat2, request.params.long2, 
+                                wgs84_code, gmap_latlon_code);
+   });
+})
 
+function promiseGetBB(lat1, long1, lat2, long2, src_code, dst_code)
+{
+   var deferred = q.defer();
    oracledb.getConnection(
       {
          user          : "cnelpostmaster",
@@ -273,36 +286,39 @@ app.get('/bb/:lat1,:long1,:lat2,:long2', function(req, res) {
       },
       function(err, connection)
       {
-         if (err) { console.error(err); return; }
+         if (err) {
+            deferred.reject(err);
+            return;
+         }
          connection.execute(
             "SELECT v.sdp.sdo_point.y lat, v.sdp.sdo_point.x lon, "
           + "       v.observacio, v.objectid "
           + "FROM "
           + "   (SELECT sdo_cs.transform( "
-          + "              sdo_geometry(2001,32717, "
+          + "              sdo_geometry(2001," + src_code + ", "
           + "                           SDO_POINT_TYPE("
           +                                "p.coord_x, p.coord_y,"
           + "                              NULL),"
           + "                           null, null),"
-          + "              8307) sdp, "
+          + "              " + dst_code + ") sdp, "
           + "           p.observacio, p.objectid "
           + "    FROM postes p, "
           + "         (select sdo_cs.transform( "
-          + "                    sdo_geometry(2001,8307, "
+          + "                    sdo_geometry(2001," + dst_code + ", "
           + "                                 SDO_POINT_TYPE("
-          +                                      req.params.long1 + ","
-          +                                      req.params.lat1 + ","
+          +                                      long1 + ","
+          +                                      lat1 + ","
           + "                                    NULL),"
           + "                                 null, null),"
-          + "                    32717) as sdo from dual) t,"
+          + "                    " + src_code + ") as sdo from dual) t,"
           + "         (select sdo_cs.transform( "
-          + "                    sdo_geometry(2001,8307, "
+          + "                    sdo_geometry(2001," + dst_code + ", "
           + "                                 SDO_POINT_TYPE("
-          +                                      req.params.long2 + ","
-          +                                      req.params.lat2 + ","
+          +                                      long2 + ","
+          +                                      lat2 + ","
           + "                                    NULL),"
           + "                                 null, null),"
-          + "                    32717) as sdo from dual) u "
+          + "                    " + src_code + ") as sdo from dual) u "
           + "    WHERE p.coord_x between t.sdo.sdo_point.x"
           + "                        and u.sdo.sdo_point.x"
           + "      AND p.coord_y between t.sdo.sdo_point.y"
@@ -312,12 +328,15 @@ app.get('/bb/:lat1,:long1,:lat2,:long2', function(req, res) {
             { outFormat: oracledb.OBJECT },
             function(err, result)
             {
-               if (err) { console.error(err); return; }
-               console.log(result.rows);
-               res.end( JSON.stringify(result.rows) );
+               if (err) {
+                  deferred.reject(err);
+                  return;
+               }
+               deferred.resolve(result.rows);
             });
       });
-})
+   return deferred.promise;
+}
 
 
 var server = app.listen(8081, function () {
