@@ -64,6 +64,11 @@ app.get('/get_poles',function(req,res){
 	var end_point = "/bb/" + boundingbox['min_lat'] + "%" + boundingbox['min_lng'] + "%" + boundingbox['max_lat'] + "%" + boundingbox['max_lng'];
 	request('http://localhost:6050' + end_point, function (error, response, body) {
   		if (!error && response.statusCode == 200) {
+  			
+  			var r = JSON.parse(body);
+
+  			console.log(r.num_poles);
+
     		res.json(JSON.parse(body));
   		}else{
   			res.json({});

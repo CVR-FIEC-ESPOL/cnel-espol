@@ -12,8 +12,7 @@
     <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
     <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
-    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false">
-    </script>
+    <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3GG1bWOb8u2eCEteiCY1yGnaKrqgW6R4&libraries=places"></script>
     <script type="text/javascript" src="lib/util.js"></script>
     <script type="text/javascript" src="lib/observable.js"></script>
     <script type="text/javascript" src="lib/pole_data_manager.js"></script>
@@ -57,21 +56,9 @@
               <label title="Una los puntos que ha dibujado sobre el mapa" class="polygon_drawer_icon"  ></label>
             </button>
             
-            <!--
-            <button id="drag_polygon" type="submit" class="btn btn-success" disabled="">
-              <span title="Arrastre el poligono que ha dibujado sobre el mapa" class="glyphicon glyphicon-move"></span>
+            <button id="search_poles" type="submit" class="btn btn-primary">
+              <label title="Obtenga información de los postes que estan dentro del poligono que ha dibujado" class="polygon_search_pole"></label>
             </button>
-
-            <button id="edit_polygon" type="submit" class="btn btn-success" disabled="">
-              <span title="Edite el poligono que ha dibujado sobre el mapa" class="glyphicon glyphicon-edit"></span>
-            </button>
-
-            <button id="remove_polygon" type="submit" class="btn btn-success" disabled="">
-              <span title="Elimine el poligono que ha dibujado sobre el mapa" class="glyphicon glyphicon-trash"></span>
-            </button>
-            <button id="search_poles" type="submit" class="btn btn-success">
-              <span title="Obtenga información de los postes que estan dentro del poligono que ha dibujado" class="glyphicon glyphicon-search"></span>
-            </button>-->
           </div>
           <div id = "map" class="map-canvas col-md-12">
           </div>
@@ -154,6 +141,27 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-primary">Aceptar</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="modal_search" class="modal fade" role="dialog">
+      <div class="modal-dialog">
+        <!-- Modal content-->
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal">&times;</button>
+            <h4 class="modal-title">Buscar</h4>
+          </div>
+          <div class="modal-body">
+            <div class="col-md-9">
+              <input id="address" class="location-input" type="text" placeholder="Ingrese direccion">
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button id="ok_search" type="button" class="btn btn-primary">Aceptar</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
           </div>
         </div>

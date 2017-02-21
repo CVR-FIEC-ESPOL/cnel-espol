@@ -25,6 +25,14 @@ button{
   margin: 0px;
 }
 
+.polygon_search_pole{
+  background-image: url("../img/search_place.png");
+  background-size: cover;
+  height: 40px;
+  width: 40px;
+  margin: 0px;
+}
+
 .active_drawing_icon{
   background-image: url("../img/active_draw_polygon.png");
   background-size: cover;
@@ -129,6 +137,20 @@ button{
 button{
   margin: 0px 10px 0px 10px;
 }
+
+.pac-container {
+    background-color: #FFF;
+    z-index: 20;
+    position: fixed;
+    display: inline-block;
+    float: left;
+}
+.modal{
+    z-index: 20;   
+}
+.modal-backdrop{
+    z-index: 10;        
+}​
 
 .media-body{
   height: 100%;

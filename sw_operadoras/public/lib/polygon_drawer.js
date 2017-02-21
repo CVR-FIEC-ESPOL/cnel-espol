@@ -18,8 +18,8 @@ var PolygonDrawer = function(map){
 	
 	this.region = null;
 	//$("#draw_polygon").attr('disabled','disabled');
-  	$("#search_poles").attr('disabled','disabled');
-  	$("#remove_polygon").attr('disabled','disabled');
+  	//.attr('disabled','disabled');
+  	//$("#remove_polygon").attr('disabled','disabled');
 
   	$("#select_pole").click(this.on_select_pole.bind(this));
   	$("#remove_selected_pole").click(this.remove_selected_pole.bind(this));
@@ -28,7 +28,8 @@ var PolygonDrawer = function(map){
   	$("#draw_polygon" ).click(this.on_draw_polygon.bind(this));
 
   	$("#search_poles" ).click(this.on_search_poles.bind(this));
-  	$("#remove_polygon" ).click(this.on_remove_polygon.bind(this));
+  	$("#ok_search").click(this.search_location.bind(this));
+  	//$("#remove_polygon" ).click(this.on_remove_polygon.bind(this));
 }
  
 
@@ -70,9 +71,38 @@ PolygonDrawer.prototype.on_draw_polygon = function(){
 }
 
 PolygonDrawer.prototype.on_search_poles = function(){
-
+	$('#modal_search').modal('show');
+	this.init_autocomplete();
 }
 
-PolygonDrawer.prototype.on_remove_polygon = function(){
+PolygonDrawer.prototype.init_autocomplete = function() {
+  autocomplete = new google.maps.places.Autocomplete(( document.getElementById('address') ),{ types: ['geocode'] });
+  //autocomplete.addListener('place_changed', this.search_location);
+}
 
+PolygonDrawer.prototype.search_location = function(){
+	var address = document.getElementById('address').value;
+	console.log(address);
+	var geocoder = new google.maps.Geocoder();
+
+	geocoder.geocode({'address': address}, function(results, status) {
+	  
+	  if (status === google.maps.GeocoderStatus.OK) {
+	    var lat = results[0].geometry.location.lat();
+	    var lng = results[0].geometry.location.lng(); 
+	    console.log(lat);
+	    console.log(lng);
+	  	self.map.setCenter(results[0].geometry.location);
+	  	/*marker.setMap(null);
+	  	marker = new google.maps.Marker({
+	    	map: mapViewer,
+	    	position: results[0].geometry.location
+	  	});*/
+
+	  } else {
+	  	alert('Geocode was not successful for the following reason: ' + status);
+	  }
+
+  	});
+  	$('#modal_search').modal('hide');
 }

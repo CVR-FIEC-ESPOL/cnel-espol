@@ -11,7 +11,6 @@ app.use( bodyParser.json() );
 //app.use( bodyParser.text() );
 //app.use( bodyParser.urlencoded({extended: false}) );
 
-
 /* decodeBase64Image(<base64 string>)
  * Decodes a base-64 image
  * Adapted from:
