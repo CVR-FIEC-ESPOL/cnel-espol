@@ -268,7 +268,7 @@ function promiseGetPoste(connection, sql_clause)
    var deferred = q.defer();
 
    connection.execute(
-      "SELECT observacio, objectid "
+      "SELECT observacio, globalid "
     + "FROM postes "
     + "WHERE " + sql_clause,
       {},
@@ -282,9 +282,9 @@ function promiseGetPoste(connection, sql_clause)
          _.each(result.rows, function(obj, index)
          {
             connection.execute(
-               "SELECT rfid, operador "
+               "SELECT rfid, operadora "
              + "FROM cabequip "
-             + "WHERE poste_id = " + obj.OBJECTID,
+             + "WHERE poste_id = '" + obj.GLOBALID + "'",
                {},
                { outFormat: oracledb.OBJECT },
                function(e2, r2)
