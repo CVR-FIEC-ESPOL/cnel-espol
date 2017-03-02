@@ -5,5 +5,5 @@ create table auth
     service_version    varchar2(8),
     operadora          varchar2(32),
     constraint auth_pk primary key (user_id),
-    constraint operadoras_fk foreign key (operadora) references operadoras(operadora))
+    constraint auth_operadoras_fk foreign key (operadora) references operadoras(operadora))
 /

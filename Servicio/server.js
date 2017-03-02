@@ -105,11 +105,12 @@ app.post('/poste/extras/foto', function(req, res)
 
 app.post('/poste/extras', function(req, res)
 {
-   var spid = req.body.spid;
-   var objectid = req.body.objectid;
-   var ncables = req.body.ncables;
+   let codigo = req.body.codigo;
+   let objectid = req.body.objectid;
+   let globaluid = req.body.globalid;
+   let ncables = req.body.ncables;
 
-   console.log(`spid: ${spid}, objectid: ${objectid}, ncables: ${ncables}`);
+   console.log(`codigo: ${codigo}, objectid: ${objectid}, globalid: ${globalid}, ncables: ${ncables}`);
 /*
    let promise =
       promiseWriteFile('POS', objectid, req.body.fotoposte, null).then(
