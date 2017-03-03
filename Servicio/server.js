@@ -107,10 +107,10 @@ app.post('/poste/extras', function(req, res)
 {
    let codigo = req.body.codigo;
    let objectid = req.body.objectid;
-   let globaluid = req.body.globalid;
+   let uuid = req.body.uuid;
    let ncables = req.body.ncables;
 
-   console.log(`codigo: ${codigo}, objectid: ${objectid}, globalid: ${globalid}, ncables: ${ncables}`);
+   console.log(`codigo: ${codigo}, objectid: ${objectid}, uuid: ${uuid}, ncables: ${ncables}`);
 /*
    let promise =
       promiseWriteFile('POS', objectid, req.body.fotoposte, null).then(
@@ -230,7 +230,7 @@ app.get('/poste/codigo/:codigo', function(req, res)
 {
    onConnectAndAuth(req, res, function(connection, user_id)
    {
-      promiseGetPoste(connection, "observacio = '" + req.params.codigo + "'").then(
+      promiseGetPoste(connection, "poste_codigo = '" + req.params.codigo + "'").then(
          function(rows)
          {
             console.log(rows);
@@ -248,7 +248,7 @@ app.get('/poste/oid/:objectid', function(req, res)
 {
    onConnectAndAuth(req, res, function(connection, user_id)
    {
-      promiseGetPoste(connection, "objectid = " + req.params.objectid).then(
+      promiseGetPoste(connection, "poste_objectid = " + req.params.objectid).then(
          function(rows)
          {
             console.log(rows);
@@ -268,8 +268,8 @@ function promiseGetPoste(connection, sql_clause)
    var deferred = q.defer();
 
    connection.execute(
-      "SELECT observacio, globalid "
-    + "FROM postes "
+      "SELECT poste_codigo, poste_objectid, poste_id "
+    + "FROM poste_extras "
     + "WHERE " + sql_clause,
       {},
       { outFormat: oracledb.OBJECT },
@@ -282,9 +282,9 @@ function promiseGetPoste(connection, sql_clause)
          _.each(result.rows, function(obj, index)
          {
             connection.execute(
-               "SELECT rfid, operadora "
+               "SELECT tag, rfid, operadora "
              + "FROM cabequip "
-             + "WHERE poste_id = '" + obj.GLOBALID + "'",
+             + "WHERE poste_id = '" + obj.POSTE_ID + "'",
                {},
                { outFormat: oracledb.OBJECT },
                function(e2, r2)
