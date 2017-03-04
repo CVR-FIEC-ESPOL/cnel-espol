@@ -1,0 +1,12 @@
+curl -v -X POST \
+   -H 'Content-Type:image/jpeg' \
+   -H 'Transfer-Encoding:chunked' \
+   -H 'Content-Disposition:attachment; filename ="martin.jpg"' \
+   -T "mathias.jpg" \
+   http://127.0.0.1:8081/poste/extras/foto
+
+#  -H 'Content-Type:application/octet-stream; name="elninio.jpg"' \
+#  -H 'Content-Type:image/jpeg' \
+#  -H 'Content-Type:application/octet-stream' \
+#  -H 'Content-Type:application/octet-stream; name="elninio.jpg"' \
+#  -H 'Content-Type:application/multipart/form-data' \

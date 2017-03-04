@@ -1,7 +1,6 @@
 var express = require('express');
 var app = express();
 var fs = require("fs");
-var oracledb = require('oracledb');
 var _ = require('underscore');
 var q = require('q');
 var bodyParser = require('body-parser');
@@ -68,24 +67,7 @@ function promiseWriteFile(prefix, objectid, photo, previousVal)
 
 function onConnect(success, failure)
 {
-   oracledb.getConnection(
-      {
-         user          : "cnelpostmaster",
-         password      : "123",
-         connectString : "localhost/XE"
-      },
-      function(err, connection)
-      {
-         if (err) {
-            if (failure) { failure(err); }
-            else {
-               // By default, just send the error to console
-               console.error(err);
-            }
-            return;
-         }
-         success(connection);
-      });
+   success(null);
 }
 
 app.post('/poste/extras/foto', function(req, res)
@@ -105,37 +87,11 @@ app.post('/poste/extras/foto', function(req, res)
 
 app.post('/poste/extras', function(req, res)
 {
-   let codigo = req.body.codigo;
-   let objectid = req.body.objectid;
-   let uuid = req.body.uuid;
-   let ncables = req.body.ncables;
+   var spid = req.body.spid;
+   var objectid = req.body.objectid;
+   var ncables = req.body.ncables;
 
-   console.log(`codigo: ${codigo}, objectid: ${objectid}, uuid: ${uuid}, ncables: ${ncables}`);
-/*
-   let promise =
-      promiseWriteFile('POS', objectid, req.body.fotoposte, null).then(
-         function(val)
-         {
-            return promiseWriteFile('CAB', objectid, req.body.fotocables, val);
-         });
-   promise.then(
-      function(val)
-      {
-         console.log('eeexito... value: ' + val);
-         res.end();
-      },
-      function(errobj)
-      {
-         if (errobj.prevsucc) {
-            console.log('A borrar ' + errobj.prevsucc[0].fname);
-            fs.unlinkSync(errobj.prevsucc[0].fname);
-         }
-         res.status(500);
-         res.send(errobj.erro);
-         res.end();
-         console.error('errorcito.. value: ' + errobj.erro);
-      });
- */
+   console.log(`spid: ${spid}, objectid: ${objectid}, ncables: ${ncables}`);
    res.end();
 })
 
@@ -168,24 +124,7 @@ function promiseAuth(connection, req)
    let matches = auth.match(/^SharedKey ([A-Za-z0-9]+):(.+)$/);
    let user_id = matches[1];
 
-   connection.execute(
-      "SELECT access_key, service_version "
-    + "FROM auth "
-    + "WHERE user_id = '" + user_id + "'",
-      {},
-      { outFormat: oracledb.OBJECT },
-      function(err, result)
-      {
-         if (err) {
-            deferred.reject(err);
-            return;
-         }
-         if (result.rows.length == 0) {
-            // Not going to be rejected, but resolved with ko
-            deferred.resolve( new Error('no user ' + user_id) );
-            return;
-         }
-         let access_key = result.rows[0].ACCESS_KEY;
+         let access_key = 'elpassword';
          let key = new Buffer(access_key, "base64");
          let hmac = crypto.createHmac("sha256", key);
          let inputvalue = build_canonicalized_string(req);
@@ -197,7 +136,6 @@ function promiseAuth(connection, req)
          console.log('reqsig: "' + req_sig + '"');
 
          deferred.resolve( req_sig == sig ? user_id : new Error('ko') );
-      });
 
    return deferred.promise;
 }
@@ -229,7 +167,7 @@ app.get('/poste/codigo/:codigo', function(req, res)
 {
    onConnectAndAuth(req, res, function(connection, user_id)
    {
-      promiseGetPoste(connection, "poste_codigo = '" + req.params.codigo + "'").then(
+      promiseGetPoste(connection, "observacio = '" + req.params.codigo + "'").then(
          function(rows)
          {
             console.log(rows);
@@ -247,7 +185,7 @@ app.get('/poste/oid/:objectid', function(req, res)
 {
    onConnectAndAuth(req, res, function(connection, user_id)
    {
-      promiseGetPoste(connection, "poste_objectid = " + req.params.objectid).then(
+      promiseGetPoste(connection, "objectid = " + req.params.objectid).then(
          function(rows)
          {
             console.log(rows);
@@ -266,40 +204,7 @@ function promiseGetPoste(connection, sql_clause)
 {
    var deferred = q.defer();
 
-   connection.execute(
-      "SELECT poste_codigo, poste_objectid, poste_id "
-    + "FROM poste_extras "
-    + "WHERE " + sql_clause,
-      {},
-      { outFormat: oracledb.OBJECT },
-      function(err, result)
-      {
-         if (err) {
-            deferred.reject(err);
-            return;
-         }
-         _.each(result.rows, function(obj, index)
-         {
-            connection.execute(
-               "SELECT tag, rfid, operadora "
-             + "FROM cabequip "
-             + "WHERE poste_id = '" + obj.POSTE_ID + "'",
-               {},
-               { outFormat: oracledb.OBJECT },
-               function(e2, r2)
-               {
-                  if (e2) {
-                     deferred.reject(e2);
-                     return;
-                  }
-                  obj.cabequip = r2.rows;
-                  if (index + 1 == result.rows.length) {
-                     deferred.resolve(result.rows);
-                     return;
-                  }
-               });
-         });
-      });
+            deferred.reject(new Error('not implemented'));
 
    return deferred.promise;
 }
@@ -331,57 +236,17 @@ function promiseGetBB(connection, lat1, long1, lat2, long2, src_code, dst_code)
 {
    var deferred = q.defer();
 
-   connection.execute(
-      "SELECT v.sdp.sdo_point.y lat, v.sdp.sdo_point.x lon, "
-    + "       v.observacio, v.objectid "
-    + "FROM "
-    + "   (SELECT sdo_cs.transform( "
-    + "              sdo_geometry(2001," + src_code + ", "
-    + "                           SDO_POINT_TYPE("
-    +                                "p.coord_x, p.coord_y,"
-    + "                              NULL),"
-    + "                           null, null),"
-    + "              " + dst_code + ") sdp, "
-    + "           p.observacio, p.objectid "
-    + "    FROM postes p, "
-    + "         (select sdo_cs.transform( "
-    + "                    sdo_geometry(2001," + dst_code + ", "
-    + "                                 SDO_POINT_TYPE("
-    +                                      long1 + ","
-    +                                      lat1 + ","
-    + "                                    NULL),"
-    + "                                 null, null),"
-    + "                    " + src_code + ") as sdo from dual) t,"
-    + "         (select sdo_cs.transform( "
-    + "                    sdo_geometry(2001," + dst_code + ", "
-    + "                                 SDO_POINT_TYPE("
-    +                                      long2 + ","
-    +                                      lat2 + ","
-    + "                                    NULL),"
-    + "                                 null, null),"
-    + "                    " + src_code + ") as sdo from dual) u "
-    + "    WHERE p.coord_x between t.sdo.sdo_point.x"
-    + "                        and u.sdo.sdo_point.x"
-    + "      AND p.coord_y between t.sdo.sdo_point.y"
-    + "                        and u.sdo.sdo_point.y"
-    + "   ) v ",
-      {},
-      { outFormat: oracledb.OBJECT },
-      function(err, result)
-      {
-         if (err) {
-            deferred.reject(err);
-            return;
-         }
-         deferred.resolve(result.rows);
-      });
+            deferred.reject(new Error('not implemented'));
 
    return deferred.promise;
 }
 
 
 var server = app.listen(8081, function () {
+
   var host = server.address().address
   var port = server.address().port
+
   console.log("CNEL service listening at http://%s:%s", host, port)
+
 })
