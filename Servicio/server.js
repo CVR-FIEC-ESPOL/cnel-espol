@@ -127,7 +127,6 @@ app.post('/poste/extras', function(req, res)
          {
             return promiseWriteFile('CAB', objectid, req.body.fotocables, val);
          });
-
    promise.then(
       function(val)
       {
@@ -391,10 +390,7 @@ function promiseGetBB(connection, lat1, long1, lat2, long2, src_code, dst_code)
 
 
 var server = app.listen(8081, function () {
-
   var host = server.address().address
   var port = server.address().port
-
   console.log("CNEL service listening at http://%s:%s", host, port)
-
 })

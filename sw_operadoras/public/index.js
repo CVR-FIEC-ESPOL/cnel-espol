@@ -70,13 +70,16 @@ function get_current_bounds(){
 
 function parse_poles(response){
   var poles = response['locations'];
+
   var locations = [];
   
   for(var i in poles){
     var location = poles[i];
-    locations.push({'object_id': location.object_id ,'lat': parseFloat(location.lat), 'lng': parseFloat(location.lng),'marked':false});
+    locations.push({'object_id': location.OBJECT_ID ,'lat': parseFloat(location.LAT), 'lng': parseFloat(location.LNG)});
   }
 
+  console.log("locations");
+  console.log(locations);
   return locations;
 }
 

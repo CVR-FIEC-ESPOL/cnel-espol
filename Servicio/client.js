@@ -46,8 +46,7 @@ var options = {
    path: '/bb/100,0,0,100',
    port: '8081',
    method: method,
-   headers: {'Authorization': 'SharedKey user1:' + build_signature(method, d),
-             'Date': d}
+   headers: {'Authorization': 'SharedKey user1:' + build_signature(method, d),'Date': d}
 };
 
 var req = http.request(options, function(res) {
