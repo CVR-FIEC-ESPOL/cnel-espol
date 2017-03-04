@@ -72,7 +72,9 @@ function onConnect(success, failure)
 
 app.post('/poste/extras/foto', function(req, res)
 {
-/*
+   onConnectAndAuth(req, res, function(connection, user_id)
+   {
+ /*
    req.on('data', (chunk) => {
       console.log('chunk of ' + chunk.length + ' recibido');
    });
@@ -83,6 +85,7 @@ app.post('/poste/extras/foto', function(req, res)
    let downloadfile = fs.createWriteStream(filename);
    req.pipe(downloadfile);
    res.end();
+   }
 })
 
 app.post('/poste/extras', function(req, res)
@@ -124,7 +127,7 @@ function promiseAuth(connection, req)
    let matches = auth.match(/^SharedKey ([A-Za-z0-9]+):(.+)$/);
    let user_id = matches[1];
 
-         let access_key = 'elpassword';
+         let access_key = '123';
          let key = new Buffer(access_key, "base64");
          let hmac = crypto.createHmac("sha256", key);
          let inputvalue = build_canonicalized_string(req);

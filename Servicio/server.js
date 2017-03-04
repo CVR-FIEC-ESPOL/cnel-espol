@@ -178,7 +178,7 @@ function promiseAuth(connection, req)
    let user_id = matches[1];
 
    connection.execute(
-      "SELECT access_key, service_version "
+      "SELECT access_key "
     + "FROM auth "
     + "WHERE user_id = '" + user_id + "'",
       {},
