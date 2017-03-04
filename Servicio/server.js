@@ -90,17 +90,21 @@ function onConnect(success, failure)
 
 app.post('/poste/extras/foto', function(req, res)
 {
-/*
-   req.on('data', (chunk) => {
-      console.log('chunk of ' + chunk.length + ' recibido');
-   });
- */
+   onConnectAndAuth(req, res, function(connection, user_id)
+   {
+   /*
+      req.on('data', (chunk) => {
+         console.log('chunk of ' + chunk.length + ' recibido');
+      });
+    */
 
-   let matches = req.headers['content-disposition'].match(/.+filename[ ]*=[ ]*"(.+)"$/);
-   let filename = matches[1];
-   let downloadfile = fs.createWriteStream(filename);
-   req.pipe(downloadfile);
-   res.end();
+      let matches = req.headers['content-disposition'].match(/.+filename[ ]*=[ ]*"(.+)"$/);
+      let filename = matches[1];
+      console.log('photo received: ' + filename + ', by user: ' + user_id);
+      let downloadfile = fs.createWriteStream(filename);
+      req.pipe(downloadfile);
+      res.end();
+   });
 })
 
 app.post('/poste/extras', function(req, res)
@@ -109,6 +113,11 @@ app.post('/poste/extras', function(req, res)
    let objectid = req.body.objectid;
    let uuid = req.body.uuid;
    let ncables = req.body.ncables;
+   let x = req.body.x;
+   let y = req.body.y;
+   let mangas_count = req.body.mangas_count;
+   let cajas_de_dispersion_count = req.body.cajas_de_dispersion_count;
+   let taps_count = req.body.taps_count;
 
    console.log(`codigo: ${codigo}, objectid: ${objectid}, uuid: ${uuid}, ncables: ${ncables}`);
 /*
