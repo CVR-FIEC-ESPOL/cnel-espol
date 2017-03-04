@@ -177,12 +177,14 @@ app.get('/poste/codigo/:codigo', function(req, res)
 
 app.get('/poste/oid/:objectid', function(req, res)
 {
-   get_poste(req, res, "objectid = " + req.params.objectid);
+  get_poste(req, res, "objectid = " + req.params.objectid);
 })
+
 
 function get_poste(req, res, sql_clause)
 {
    let promise = promiseAuth(req);
+   console.log("get_poste");
    promise.then(
       function(val)
       {
@@ -263,59 +265,58 @@ function promiseGetPoste(sql_clause)
 }
 
 app.get('/bb/:lat1,:long1,:lat2,:long2', function(req, res) {
+	var boundingbox = req.params;
+	console.log(boundingbox);
 
-   oracledb.getConnection(
-      {
-         user          : "cnelpostmaster",
-         password      : "123",
-         connectString : "localhost/XE"
-      },
-      function(err, connection)
-      {
-         if (err) { console.error(err); return; }
-         connection.execute(
-            "SELECT v.sdp.sdo_point.y lat, v.sdp.sdo_point.x lon, "
-          + "       v.observacio, v.objectid "
-          + "FROM "
-          + "   (SELECT sdo_cs.transform( "
-          + "              sdo_geometry(2001,32717, "
-          + "                           SDO_POINT_TYPE("
-          +                                "p.coord_x, p.coord_y,"
-          + "                              NULL),"
-          + "                           null, null),"
-          + "              8307) sdp, "
-          + "           p.observacio, p.objectid "
-          + "    FROM postes p, "
-          + "         (select sdo_cs.transform( "
-          + "                    sdo_geometry(2001,8307, "
-          + "                                 SDO_POINT_TYPE("
-          +                                      req.params.long1 + ","
-          +                                      req.params.lat1 + ","
-          + "                                    NULL),"
-          + "                                 null, null),"
-          + "                    32717) as sdo from dual) t,"
-          + "         (select sdo_cs.transform( "
-          + "                    sdo_geometry(2001,8307, "
-          + "                                 SDO_POINT_TYPE("
-          +                                      req.params.long2 + ","
-          +                                      req.params.lat2 + ","
-          + "                                    NULL),"
-          + "                                 null, null),"
-          + "                    32717) as sdo from dual) u "
-          + "    WHERE p.coord_x between t.sdo.sdo_point.x"
-          + "                        and u.sdo.sdo_point.x"
-          + "      AND p.coord_y between t.sdo.sdo_point.y"
-          + "                        and u.sdo.sdo_point.y"
-          + "   ) v ",
-            {},
-            { outFormat: oracledb.OBJECT },
-            function(err, result)
-            {
-               if (err) { console.error(err); return; }
-               console.log(result.rows);
-               res.end( JSON.stringify(result.rows) );
-            });
-      });
+	oracledb.getConnection({
+		user: "system",
+		password: "2487",
+		connectString:  "localhost/XE"
+	},function(err, connection){
+	    if (err) { console.error(err); return; }
+		connection.execute(
+		"SELECT v.sdp.sdo_point.y lat, v.sdp.sdo_point.x lng, "
+		+ "       v.observacio, v.objectid object_id "
+		+ "FROM "
+		+ "   (SELECT sdo_cs.transform( "
+		+ "              sdo_geometry(2001,32717, "
+		+ "                           SDO_POINT_TYPE("
+		+                                "p.coord_x, p.coord_y,"
+		+ "                              NULL),"
+		+ "                           null, null),"
+		+ "              8307) sdp, "
+		+ "           p.observacio, p.objectid "
+		+ "    FROM postes p, "
+		+ "         (select sdo_cs.transform( "
+		+ "                    sdo_geometry(2001,8307, "
+		+ "                                 SDO_POINT_TYPE("
+		+                                      req.params.long1 + ","
+		+                                      req.params.lat1 + ","
+		+ "                                    NULL),"
+		+ "                                 null, null),"
+		+ "                    32717) as sdo from dual) t,"
+		+ "         (select sdo_cs.transform( "
+		+ "                    sdo_geometry(2001,8307, "
+		+ "                                 SDO_POINT_TYPE("
+		+                                      req.params.long2 + ","
+		+                                      req.params.lat2 + ","
+		+ "                                    NULL),"
+		+ "                                 null, null),"
+		+ "                    32717) as sdo from dual) u "
+		+ "    WHERE p.coord_x between t.sdo.sdo_point.x"
+		+ "                        and u.sdo.sdo_point.x"
+		+ "      AND p.coord_y between t.sdo.sdo_point.y"
+		+ "                        and u.sdo.sdo_point.y"
+		+ "   ) v ",
+		{},
+		{ outFormat: oracledb.OBJECT },
+		function(err, result)
+		{
+		   if (err) { console.error(err); return; }
+		   //console.log(result.rows);
+		   res.end( JSON.stringify(result.rows) );
+		});
+    });
 })
 
 

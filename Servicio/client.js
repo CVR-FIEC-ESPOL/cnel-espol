@@ -45,8 +45,7 @@ var options = {
    path: '/poste/oid/97613',
    port: '8081',
    method: method,
-   headers: {'Authorization': 'SharedKey user1:' + build_signature(method, d),
-             'Date': d}
+   headers: {'Authorization': 'SharedKey user1:' + build_signature(method, d),'Date': d}
 };
 
 var req = http.request(options, function(res) {
