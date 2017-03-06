@@ -16,28 +16,41 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 app.use(session({secret: 'ssshhhhh'}));
-app.use(express.static('./public'));
-app.use(express.static('./public/img'));
+/*app.use(express.static('./public'));*/
+//app.use(express.static('public', {index: 'login.html'}))
+//app.use(express.static('./public/img'));
+app.use(express.static(__dirname + '/public'));
 
+app.use('/selector_tags',function(req,res,next){
+  if(req.session.user){
+    res.sendfile('./public/selector_tags.html');
+  }else{
+    res.redirect('/');
+  }
+});
+
+
+app.use('/',function(req,res,next){
+  if(req.session.user){
+    res.sendfile('./public/selector_tags.html');
+    return;
+  }
+  next();
+});
 
 app.get('/', function (req, res) {
-  console.log("home");
-  if(req.session.user){
-    res.redirect('/selector_tags');
-  }else{
-    res.sendfile('./public/index.html');
-  }
+  console.log("login");
+  res.sendfile('./public/login.html');
 });
 
 app.get('/selector_tags', function (req, res) {
   console.log("selector de tags");
-	res.sendfile('./public/selector_tags.html');
+  res.sendfile('./public/selector_tags.html');
 });
 
 app.get('/auth_fail', function (req, res) {
   res.send("No tiene cuenta en la aplicación!");
 });
-
 
 app.post('/login',function(req,res){
   var user = req.body.username;
@@ -202,14 +215,17 @@ app.get('/get_poles',function(req,res){
 	var boundingbox = req.query['bounding_box'];
 	var end_point = "/bb/" + boundingbox['min_lat'] + "," + boundingbox['min_lng'] + "," + boundingbox['max_lat'] + "," + boundingbox['max_lng'];
 
-	var options = {
-		url: 'http://localhost:8020' + end_point
-	};
+	var d = 'Tue, 05 Jul 2016 06:48:26 GMT';
+  var method = "GET";
+  var options = {
+    uri:  "http://127.0.0.1:8020" + end_point ,
+    method: method,
+    headers: {'Authorization': 'SharedKey user1:' + build_signature(method, d),'Date': d}
+  };
 
 	request(options, function (error, response, body) {
   		if (!error && response.statusCode == 200) {
   			var result = JSON.parse(body);
-  			console.log(result);
     		res.json({ 'locations' : result});
   		}else{
   			console.log(error);
