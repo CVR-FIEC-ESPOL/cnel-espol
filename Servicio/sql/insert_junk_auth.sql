@@ -7,5 +7,7 @@ insert into auth (user_id, access_key)
 insert into auth (user_id, access_key, operadora_id)
           values ('claro', 'oscuro', 1);
 insert into auth (user_id, access_key, operadora_id)
-          values ('movi', 'estrellita', 5)
+          values ('movi', 'estrellita', 5);
+insert into auth (user_id, access_key)
+          values ('cnel', '123')
 /
