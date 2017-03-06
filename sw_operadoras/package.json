@@ -6,7 +6,8 @@
     "oauth": "0.9.12",
     "jsonfile": "~2.2.3",
     "promise": "7.0.4",
-    "mongoose": "~4.4.5",
-    "request": "2.79.0"
+    "body-parser": "1.17.0",
+    "request": "2.79.0",
+    "express-session": "^1.7.6"
   }
 }

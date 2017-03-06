@@ -1,0 +1,5 @@
+curl -X POST \
+   -H 'Content-Type:application/json' \
+   -H "Transfer-Encoding:chunked" \
+   -d '{"spid": 13, "objectid": 97, "ncables": 8}' \
+   http://127.0.0.1:8081/poste/extras
