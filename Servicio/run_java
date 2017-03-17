@@ -1,1 +1,2 @@
-java -cp commons-io-2.5/commons-io-2.5.jar:. Test
+# java -cp commons-io-2.5/commons-io-2.5.jar:. $1
+java -cp commons-io-2.5/commons-io-2.5.jar:commons-codec-1.10/commons-codec-1.10.jar:. $1
