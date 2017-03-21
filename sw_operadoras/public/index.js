@@ -5,6 +5,7 @@ var pole_overlay = null;
 var user = "movistar";
 var map;
 var bounds;
+var url = "/get_poles";
 
 var config = { 
   mapTypeId: google.maps.MapTypeId.ROADMAP,
@@ -13,8 +14,6 @@ var config = {
   dissipating: true,
   zoomControl: true
 }
-
-var url_data = "/data/locations.json";
 
 google.maps.event.addDomListener(window, 'load', function(){
   map = new google.maps.Map(document.getElementById('map'),config);
@@ -25,34 +24,49 @@ google.maps.event.addDomListener(window, 'load', function(){
 
   google.maps.event.addListenerOnce(map,"bounds_changed",function() {
     var bounding_box = get_current_bounds();
-    
-    pole_data_manager = new PoleDataManager(bounding_box);//instancia pole_data_manager con las coordenas actuales
-
-    pole_data_manager.download().then(function(response){
-      add_layer(parse_poles(response));
-      pole_data_manager.restore();
-    },function(err){
-      console.log(err);
-    });
-
-    drawer = new PolygonDrawer(map);
-    drawer.add_observer(pole_data_manager);
+    get_data(bounding_box,url);
   });
 
   google.maps.event.addListener(map,'dragend',function(){
-    if(pole_data_manager!=null){
-      var bounding_box = get_current_bounds();//nuevo bounding box
-      pole_data_manager.set_bounding_box(bounding_box);//establece nuevo bounding box 
-      pole_data_manager.download().then(function(response){//descarga datos dentro del nuevo bounding box
-        add_layer(parse_poles(response));
-        pole_data_manager.restore();//carga datos marcados desde session storage
-      },function(err){
-        console.log(err);
-      });
-    }
+    var bounding_box = get_current_bounds();//nuevo bounding box
+    get_data(bounding_box,url);
   })
 
+  $('#radio_container input:radio').click(function() {
+    if ($(this).val() === '1') {
+      bounding = get_current_bounds();
+      url = "/get_poles";
+      console.log(url);
+      get_data(bounding,url);
+    } else if ($(this).val() === '2') {
+      bounding = get_current_bounds();
+      url = "/get_poles_with_tags";
+      console.log(url);
+      get_data(bounding,url);
+    }
+  });
+
 });
+
+function get_data(bounding_box,url){
+  if(pole_data_manager!=null){
+    pole_data_manager.set_bounding_box(bounding_box);//establece nuevo bounding box 
+  }else{
+    pole_data_manager = new PoleDataManager(bounding_box);//instancia pole_data_manager con las coordenas actuales
+    drawer = new Drawer(map);
+    drawer.add_observer(pole_data_manager);
+  }
+  
+  pole_data_manager.download(url).then(function(response){
+    add_layer(parse_poles(response));
+  },function(xhr, status, error){
+    console.log(error);
+  });
+  
+  //pole_data_manager.storage.restore();
+
+}
+
 
 function get_current_bounds(){
   var ne = map.getBounds().getNorthEast();
@@ -78,8 +92,7 @@ function parse_poles(response){
     locations.push({'object_id': location.OBJECT_ID ,'lat': parseFloat(location.LAT), 'lng': parseFloat(location.LNG)});
   }
 
-  console.log("locations");
-  console.log(locations);
+
   return locations;
 }
 
@@ -87,7 +100,5 @@ function add_layer(locations){
   pole_overlay = new PoleOverlay(map, { 'bounds': bounds }, locations);
 
   pole_data_manager.set_layer(pole_overlay);
-
-  //pole_overlay.observable.remove_observers();
-  //pole_overlay.observable.add_observer(pole_data_manager);
 }
+

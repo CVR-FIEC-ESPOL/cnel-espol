@@ -51,7 +51,7 @@ MarkerVertex.prototype.do_action = function(context){
 
 	this.handler = google.maps.event.addListener(map, 'mouseup', function(e) {
 		var location = e.latLng;
-		self.context.add_data_point(location);  	
+		self.context.add_polygon_vertex(location);  	
 		var circle = new google.maps.Circle(this.points_reference_cfg);
 		var marker = new google.maps.Marker({
 	        position: location,
@@ -77,18 +77,18 @@ var PolygonLinker = function(){
 }
 
 PolygonLinker.prototype.do_action = function(context){
-	var data_points = context.data_points;
+	var polygon_vertices = context.polygon_vertices;
 	var map = context.map;
 	var self = this;
 	$("#"+this.btn_id).attr('class','btn btn-danger');
 
-	if(data_points.length<2){
+	if(polygon_vertices.length<2){
 		alert("No ha marcado puntos para formar el polígono");
 		return;
 	}
 	
     this.region = new google.maps.Polygon({
-      paths: data_points,
+      paths: polygon_vertices,
       strokeColor: '#0000FF',
       strokeOpacity: 0.8,
       strokeWeight: 3,
@@ -99,24 +99,18 @@ PolygonLinker.prototype.do_action = function(context){
     });
     this.region.setMap(map);
 
-    context.data_points = []
+    context.polygon_vertices = []
     context.region = this.region;
 
     google.maps.event.addListener(this.region.getPath(), "set_at", function(){
-		context.notify({'region': self.region});
+		context.notify({'draw_polygon': self.region});
 	});
 
 	google.maps.event.addListener(this.region.getPath(), "insert_at", function(){
-		context.notify({'region': self.region});
+		context.notify({'draw_polygon': self.region});
 	});
 
-	/*
-	google.maps.event.addListener(this.region, "dragend", function(){
-		self.region = self.region;
-		context.notify({'region_has_changed': self.region});
-	});*/
-	
-	context.notify({'region':this.region});
+	context.notify({'draw_polygon':this.region});
 }
 
 PolygonLinker.prototype.change = function(){

@@ -2,7 +2,7 @@ var express = require('express');
 var app = express();
 var jsonfile = require('jsonfile');
 var request = require('request');
-var crypto = require('crypto');
+var util = require('./util.js')
 var Promise = require('promise');
 var http = require('http');
 var bodyParser = require('body-parser');
@@ -16,11 +16,12 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 app.use(session({secret: 'ssshhhhh'}));
-/*app.use(express.static('./public'));*/
+app.use(express.static('./public'));
 //app.use(express.static('public', {index: 'login.html'}))
 //app.use(express.static('./public/img'));
-app.use(express.static(__dirname + '/public'));
+//app.use(express.static(__dirname + '/public'));
 
+/*
 app.use('/selector_tags',function(req,res,next){
   if(req.session.user){
     res.sendfile('./public/selector_tags.html');
@@ -36,7 +37,7 @@ app.use('/',function(req,res,next){
     return;
   }
   next();
-});
+});*/
 
 app.get('/', function (req, res) {
   console.log("login");
@@ -52,12 +53,22 @@ app.get('/auth_fail', function (req, res) {
   res.send("No tiene cuenta en la aplicación!");
 });
 
-app.post('/login',function(req,res){
-  var user = req.body.username;
-  var password = req.body.password
+function do_realease(res,result_code){
+  res.status(result_code);
+  res.end();
+}
 
-  //var user = req.params.usuario;
-  //var password = req.params.contraseña;
+app.post('/login',function(req,res){
+  if(!req.body){
+    do_realease(res,404)
+  }
+  var user = req.body.username;
+  var password = req.body.password;
+
+  if(!user && !password){
+    do_realease(res,404);
+  }
+
   var d = 'Tue, 05 Jul 2016 06:48:26 GMT';
   var method = "GET";
 
@@ -65,25 +76,31 @@ app.post('/login',function(req,res){
     uri: 'http://127.0.0.1:8020/get_user/' + user,
     method: method,
     json: true,
-    headers: {'Authorization': 'SharedKey ' + user + ':'  + build_signature(method, d),'Date': d}
+    headers: {'Authorization': 'SharedKey ' + user + ':'  + util.build_signature(method,d,password),'Date': d}
   };
+
+  console.log(options.headers);
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      var is_user = body["is_user"]; 
-      if (typeof is_user != 'undefined' && is_user != null){
-        if(is_user){
-          req.session.user = user;
-          console.log("session ",req.session.user);
-          res.redirect('/selector_tags');
+      if(!body || typeof body == 'undefined'){
+        res.redirect('/auth_fail');
+      }else{
+        var is_user = body.is_user; 
+        if (typeof is_user != 'undefined' && is_user != null){
+          if(is_user){
+            req.session.user = user;
+            req.session.password = password;
+            console.log("session ",req.session.user);
+            res.redirect('/selector_tags');
+          }else{
+            res.redirect('/auth_fail');
+          }
         }else{
           res.redirect('/auth_fail');
         }
-      }else{
-        res.redirect('/auth_fail');
       }
     }else{
-      console.log(error);
       res.redirect('/auth_fail');
     }
   });
@@ -98,7 +115,7 @@ app.get('/get_pole/:id',function(req,res){
 	var options = {
     uri: 'http://127.0.0.1:8020/poste/oid/' + id,
     method: method,
-    headers: {'Authorization': 'SharedKey user1:' + build_signature(method, d),'Date': d}
+    headers: {'Authorization': 'SharedKey ' + req.session.user + ':' + util.build_signature(method, d,req.session.password),'Date': d}
 	};
 
   request(options, function (error, response, body) {
@@ -125,7 +142,7 @@ app.get('/get_pole_by_code/:codigo',function(req,res){
   var options = {
     uri: 'http://127.0.0.1:8020/poste/codigo/' +  code,
     method: method,
-    headers: {'Authorization': 'SharedKey user1:' + build_signature(method, d),'Date': d}
+    headers: {'Authorization': 'SharedKey ' + req.session.user  + ':' + util.build_signature(method, d,req.session.password),'Date': d}
   };
 
   request(options, function (error, response, body) {
@@ -147,7 +164,7 @@ app.get("/get_tags/:object_id",function(req,res){
   var options = {
     uri: 'http://127.0.0.1:8020/tags/' +  object_id,
     method: method,
-    headers: {'Authorization': 'SharedKey user1:' + build_signature(method, d),'Date': d}
+    headers: {'Authorization': 'SharedKey ' + req.session.user  + ':' + util.build_signature(method, d,req.session.password),'Date': d}
   };
 
   request(options, function (error, response, body) {
@@ -171,7 +188,7 @@ app.get("/get_tags_from_poles/",function(req,res){
   var method = "GET";
   var options = {
     method: method,
-    headers: {'Authorization': 'SharedKey user1:' + build_signature(method, d),'Date': d}
+    headers: {'Authorization': 'SharedKey ' + req.session.user  + ':' + util.build_signature(method, d,req.session.password),'Date': d}
   };
 
 	var get_pole = function(object_id){
@@ -212,21 +229,32 @@ app.get("/get_tags_from_poles/",function(req,res){
 })
 
 app.get('/get_poles',function(req,res){
+  console.log("/get_poles");
+  //req.session.user = "rodrigo";
+  //req.session.password = "castro";
+
 	var boundingbox = req.query['bounding_box'];
 	var end_point = "/bb/" + boundingbox['min_lat'] + "," + boundingbox['min_lng'] + "," + boundingbox['max_lat'] + "," + boundingbox['max_lng'];
+
+  console.log(end_point);
 
 	var d = 'Tue, 05 Jul 2016 06:48:26 GMT';
   var method = "GET";
   var options = {
     uri:  "http://127.0.0.1:8020" + end_point ,
     method: method,
-    headers: {'Authorization': 'SharedKey user1:' + build_signature(method, d),'Date': d}
+    headers: {'Authorization': 'SharedKey ' + req.session.user  + ':' + util.build_signature(method, d,req.session.password),'Date': d}
   };
 
 	request(options, function (error, response, body) {
   		if (!error && response.statusCode == 200) {
-  			var result = JSON.parse(body);
-    		res.json({ 'locations' : result});
+        if(typeof body != 'undefined' && body!=null){
+          var result = JSON.parse(body);
+          res.json({ 'locations' : result});
+        }else{
+          console.log(error);
+          res.json({});
+        }
   		}else{
   			console.log(error);
   			res.json({});
@@ -234,39 +262,30 @@ app.get('/get_poles',function(req,res){
 	});
 });
 
-function build_signature(method, d)
-{
-   let access_key = 'elpassword';
-   let req = {'method': method, 'headers': {'date': d}};
-   let key = new Buffer(access_key, "base64");
-   let hmac = crypto.createHmac("sha256", key);
-   let inputvalue = build_canonicalized_string(req)
-   hmac.update(inputvalue);
-   let sig = hmac.digest("base64");
-   return sig;
-}
+app.get('/get_poles_with_tags',function(req,res){
+  var boundingbox = req.query['bounding_box'];
+  var end_point = "/bb_with_tags/" + boundingbox['min_lat'] + "," + boundingbox['min_lng'] + "," + boundingbox['max_lat'] + "," + boundingbox['max_lng'];
 
-function build_canonicalized_string(
-             request, encoding, language, length,
-             md5, content_type, if_mod_since, if_match,
-             if_none_match, if_unmod_since, range)
-{
-   let cm_date = request.headers['date'];
+  console.log(end_point);
 
-   return request.method + "\n"
-    + (encoding || '') + "\n"             /*Content-Encoding*/
-    + (language || '') + "\n"             /*Content-Language*/
-    + (length || '') + "\n"                 /*Content-Length*/
-    + (md5 || '') + "\n"                       /*Content-MD5*/
-    + (content_type || '') + "\n"     /*Content-Type*/
-    + (cm_date || '') + "\n"               /*Date*/
-    + (if_mod_since || '') + "\n"     /*If-Modified-Since*/
-    + (if_match || '') + "\n"             /*If-Match*/
-    + (if_none_match || '') + "\n"   /*If-None-Match*/
-    + (if_unmod_since || '') + "\n" /*If-Unmodified-Since*/
-    + (range || '') + "\n";                  /*Range*/
-}
+  var d = 'Tue, 05 Jul 2016 06:48:26 GMT';
+  var method = "GET";
+  var options = {
+    uri:  "http://127.0.0.1:8020" + end_point ,
+    method: method,
+    headers: {'Authorization': 'SharedKey ' + req.session.user  + ':' + util.build_signature(method, d,req.session.password),'Date': d}
+  };
 
+  request(options, function (error, response, body) {
+      if (!error && response.statusCode == 200) {
+        var result = JSON.parse(body);
+        res.json({ 'locations' : result});
+      }else{
+        console.log(error);
+        res.json({});
+      }
+  });
+});
 
 var server = app.listen(5050, function () {
   var host = server.address().address;

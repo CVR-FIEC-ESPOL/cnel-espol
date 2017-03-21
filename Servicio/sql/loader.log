@@ -1,0 +1,94 @@
+
+SQL*Loader: Release 11.2.0.2.0 - Production on Sáb Mar 4 16:08:52 2017
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   loader.ctl
+Data File:      postes.csv
+  Bad File:     postes.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table POSTES, loaded from every logical record.
+Insert option in effect for this table: INSERT
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+OBJECTID                            FIRST     *   ,  O(") CHARACTER            
+USUARIOREG                           NEXT     *   ,  O(") CHARACTER            
+FECHAREGIS                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_date(:FECHAREGIS, 'MM/DD/YY')"
+FECHAMODIF                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_date(:FECHAMODIF, 'MM/DD/YY')"
+USUARIOMOD                           NEXT     *   ,  O(") CHARACTER            
+PROYECTOCO                           NEXT     *   ,  O(") CHARACTER            
+FECHACONST                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_date(:FECHACONST, 'MM/DD/YY')"
+FECHAACTIV                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_date(:FECHAACTIV, 'MM/DD/YY')"
+PROYECTOMO                           NEXT     *   ,  O(") CHARACTER            
+FECHAMOD_1                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_date(:FECHAMOD_1, 'MM/DD/YY')"
+CODIGOEMPR                           NEXT     *   ,  O(") CHARACTER            
+PROVINCIA                            NEXT     *   ,  O(") CHARACTER            
+CANTON                               NEXT     *   ,  O(") CHARACTER            
+PARROQUIA                            NEXT     *   ,  O(") CHARACTER            
+CASERIO                              NEXT     *   ,  O(") CHARACTER            
+CODIGOELEM                           NEXT     *   ,  O(") CHARACTER            
+SUBTIPO                              NEXT     *   ,  O(") CHARACTER            
+PROPIEDAD                            NEXT     *   ,  O(") CHARACTER            
+HIPERVINCU                           NEXT     *   ,  O(") CHARACTER            
+TIPOCIMIEN                           NEXT     *   ,  O(") CHARACTER            
+ATERRAMIEN                           NEXT     *   ,  O(") CHARACTER            
+CODIGOESTR                           NEXT     *   ,  O(") CHARACTER            
+ROTACIONSI                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_number(:ROTACIONSI, '999999990.99999999999990','NLS_NUMERIC_CHARACTERS = ''.,''')"
+MISUBTIPO                            NEXT     *   ,  O(") CHARACTER            
+ESTRUCTURA                           NEXT     *   ,  O(") CHARACTER            
+ESTADO                               NEXT     *   ,  O(") CHARACTER            
+MIOID                                NEXT     *   ,  O(") CHARACTER            
+GLOBALID                             NEXT     *   ,  O(") CHARACTER            
+PUESTOATIE                           NEXT     *   ,  O(") CHARACTER            
+COMENTARIO                           NEXT     *   ,  O(") CHARACTER            
+TEXTOETIQU                           NEXT     *   ,  O(") CHARACTER            
+MIGUID                               NEXT     *   ,  O(") CHARACTER            
+MIESTADO                             NEXT     *   ,  O(") CHARACTER            
+EXISTENOVE                           NEXT     *   ,  O(") CHARACTER            
+OBSERVACIO                           NEXT     *   ,  O(") CHARACTER            
+COORD_X                              NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_number(:COORD_X, '999999990.99999999999990','NLS_NUMERIC_CHARACTERS = ''.,''')"
+COORD_Y                              NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_number(:COORD_Y, '999999990.99999999999990','NLS_NUMERIC_CHARACTERS = ''.,''')"
+ALIMENTADO                           NEXT     *   ,  O(") CHARACTER            
+TIPOUSOPOS                           NEXT     *   ,  O(") CHARACTER            
+
+value used for ROWS parameter changed from 64 to 25
+
+Table POSTES:
+  150830 Rows successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                 251550 bytes(25 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:        150830
+Total logical records rejected:         0
+Total logical records discarded:        0
+
+Run began on Sáb Mar 04 16:08:52 2017
+Run ended on Sáb Mar 04 16:10:28 2017
+
+Elapsed time was:     00:01:36.45
+CPU time was:         00:00:05.83

@@ -1,4 +1,3 @@
-
 var Observer = function(){
 
 }
@@ -13,6 +12,7 @@ var PoleDataManager = function(bounding_box){
 	this.data = []
 	this.polygon_region = null
 	this.layer = null
+	this.storage = PoleStorage();
 }
 
 PoleDataManager.prototype = Object.create(Observer.prototype);
@@ -26,44 +26,42 @@ PoleDataManager.prototype.set_layer = function(layer){
 	this.layer = layer;
 }
 
-PoleDataManager.prototype.download = function() {
+PoleDataManager.prototype.download = function(url) {
 	// obtiene informacion de los postes del servidor
 	var self = this;
-
+	console.log(self.bounding_box);
+	
 	var promise = $.ajax({
 	  dataType: "json",
-	  url: "/get_poles",
-	  data: { 'bounding_box' : this.bounding_box },
+	  url: url,
+	  data: { 'bounding_box' : self.bounding_box },
 	});
 	
+	console.log("enviado peticion");
+
 	promise.done(function(response){
+		console.log(response);
 		var poles = response['locations'];
 		self.data = poles;
-	});
+	})
 	return promise;
 };
 
-
-
 PoleDataManager.prototype.upload = function(){
 	//subir info al webservices
-
 }
 
 PoleDataManager.prototype.update = function(data){
 	if(data!=null){
-		if('region' in data){
+		if('draw_polygon' in data){
 			this.polygon_region = data['region'];
 			$('#modal_message').modal('show');
 			this.show_selected_poles(this.polygon_region);
-			
 		}
 
 		if('region_has_changed' in data){
 			this.polygon_region = data['region'];
-			//$('#modal_message').modal('show');
 			this.show_selected_poles(this.polygon_region);
-			//$('#modal_message').modal('hide');
 		}
 
 		if('simple_marker_location' in data){
@@ -72,7 +70,7 @@ PoleDataManager.prototype.update = function(data){
 			if(pole!=null){
 				var id = pole['object_id'];//recibir el id del poste seleccionado
 				this.layer.draw_pole(id);
-				this.save(pole);//almacena el pole marcado en la cache
+				this.storage.save(pole);//almacena el pole marcado en la cache
 				this.add_pole_container(id,0);//agrega el pole marcado a la lista de poles
 			}
 		}
@@ -82,7 +80,7 @@ PoleDataManager.prototype.update = function(data){
 			if(pole!=null){
 				var id = pole['object_id'];//recibir el id del poste seleccionado
 				this.layer.delete_pole(id);
-				this.remove(pole);//almacena el pole marcado en la cache
+				this.storage.remove(pole);//quita el pole marcado de la cache
 				this.remove_pole_container(id);//agrega el pole marcado a la lista de poles
 			}
 		}
@@ -91,7 +89,6 @@ PoleDataManager.prototype.update = function(data){
 
 PoleDataManager.prototype.get_pole = function(query){
 	var posibles_poles = []
-
 	for(var i in this.data){
 		var pole = this.data[i];
 		var lat_query = query['lat'];
@@ -102,7 +99,6 @@ PoleDataManager.prototype.get_pole = function(query){
 			posibles_poles.push(pole);	
 		}
 	}
-	//console.log(posibles_poles)
 	if(posibles_poles.length == 1){
 		return posibles_poles[0];
 	}else if (posibles_poles.length >1){
@@ -116,58 +112,28 @@ PoleDataManager.prototype.get_pole = function(query){
 		return null;
 	}
 }
-	
-PoleDataManager.prototype.save = function(data){
-	if (window.sessionStorage) {
-		var id = data['object_id'];
-		var location = {'lat': data['lat'],'lng': data['lng']};
-	  	sessionStorage.setItem(id,JSON.stringify(location));
-	}
-}
-
-PoleDataManager.prototype.remove = function(data){
-	if (window.sessionStorage) {
-		var id = data['object_id'];
-		sessionStorage.removeItem(id);
-	}
-}
-
-PoleDataManager.prototype.restore = function(){
-	$("#pole-list").empty(); 
-	if (window.sessionStorage) {
-		var self = this;
-		$.each(sessionStorage, function(key, value){
-			var pole_saved = JSON.parse(sessionStorage.getItem(key));
-			if(pole_saved){
-				self.add_pole_container(key,0);
-			}
-		});
-	}
-}
-
 
 PoleDataManager.prototype.show_selected_poles  = function(polygon){
   var poles_selected = [];
   var id_poles = []
   var self = this;
 
-  
-  	$("#btn_mark_tags").click(function(){
-	  	for (var i in self.data){
-		  	var pole = self.data[i];
-		  	var latlng_obj = new google.maps.LatLng(pole.lat,pole.lng);
-		    var result = google.maps.geometry.poly.containsLocation(latlng_obj, polygon);
-		    if(result){
-			    poles_selected.push(pole);
-			    //id_poles.push(location.object_id);
-			    var id = pole.object_id;
-			    self.layer.draw_pole(id);
-		  		self.add_pole_container(id,1);
-		  		self.save(pole);
-		    }
-		    $('#modal_message').modal('hide');
-	  	}
-  	})
+	$("#btn_mark_tags").click(function(){
+		for (var i in self.data){
+		var pole = self.data[i];
+		var latlng_obj = new google.maps.LatLng(pole.lat,pole.lng);
+	    var result = google.maps.geometry.poly.containsLocation(latlng_obj, polygon);
+	    if(result){
+		    poles_selected.push(pole);
+		    //id_poles.push(location.object_id);
+		    var id = pole.object_id;
+		    self.layer.draw_pole(id);
+	  		self.add_pole_container(id,1);
+	  		self.storage.save(pole);
+	    }
+	    $('#modal_message').modal('hide');
+		}
+	})
   	
   	/*$.ajax({
   	  dataType: "json",

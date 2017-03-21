@@ -186,7 +186,6 @@ begin
     execute immediate
         'insert into ' || tipo_cabequip_tab_name || ' (tipo, cable_o_equipo) values (:t, :coe)'
              using 'TAP', 'EQUIPO';
-
     execute immediate
         'create table ' || poste_extras_tab_name || '(
              poste_id               varchar2(38) not null,

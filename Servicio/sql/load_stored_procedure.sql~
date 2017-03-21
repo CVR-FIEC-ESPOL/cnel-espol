@@ -1,0 +1,43 @@
+CREATE or REPLACE PROCEDURE get_poles_with_tags
+(src_code NUMBER, dst_code NUMBER , sw_lng NUMBER, sw_lat NUMBER,ne_lng NUMBER,ne_lat NUMBER,results OUT SYS_REFCURSOR)
+AS
+BEGIN
+	OPEN results FOR
+	SELECT v.sdp.sdo_point.y lat, v.sdp.sdo_point.x lng, v.observacio, v.objectid object_id 
+	FROM
+	(SELECT 
+	sdo_cs.transform(sdo_geometry(2001,src_code,SDO_POINT_TYPE(p.coord_x, p.coord_y,NULL),null, null),dst_code) sdp, p.observacio, p.objectid 
+	FROM 
+	(select poles.objectid,poles.observacio,poles.coord_x,poles.coord_y  from postes poles,poste_extras poles_ex where poles.objectid = poles_ex.poste_objectid ) p, 
+	(select sdo_cs.transform(sdo_geometry(2001,dst_code,SDO_POINT_TYPE(sw_lng,sw_lat,NULL),null, null),src_code) as sdo from dual) t,
+	(select sdo_cs.transform(sdo_geometry(2001,dst_code,SDO_POINT_TYPE(ne_lng,ne_lat,NULL),null, null),src_code) as sdo from dual) u 
+	WHERE p.coord_x between t.sdo.sdo_point.x and u.sdo.sdo_point.x AND p.coord_y between t.sdo.sdo_point.y and u.sdo.sdo_point.y ) v;
+END;
+/
+
+
+CREATE or REPLACE PROCEDURE get_poles
+(src_code NUMBER, dst_code NUMBER , sw_lng NUMBER, sw_lat NUMBER,ne_lng NUMBER,ne_lat NUMBER,results OUT SYS_REFCURSOR)
+AS
+BEGIN
+	OPEN results FOR
+	SELECT v.sdp.sdo_point.y lat, v.sdp.sdo_point.x lng, v.observacio, v.objectid object_id 
+	FROM
+	(SELECT 
+	sdo_cs.transform(sdo_geometry(2001,src_code,SDO_POINT_TYPE(p.coord_x, p.coord_y,NULL),null, null),dst_code) sdp, p.observacio, p.objectid 
+	FROM 
+	postes p, 
+	(select sdo_cs.transform(sdo_geometry(2001,dst_code,SDO_POINT_TYPE(sw_lng,sw_lat,NULL),null, null),src_code) as sdo from dual) t,
+	(select sdo_cs.transform(sdo_geometry(2001,dst_code,SDO_POINT_TYPE(ne_lng,ne_lat,NULL),null, null),src_code) as sdo from dual) u 
+	WHERE p.coord_x between t.sdo.sdo_point.x and u.sdo.sdo_point.x AND p.coord_y between t.sdo.sdo_point.y and u.sdo.sdo_point.y ) v;
+END;
+/
+
+CREATE or REPLACE PROCEDURE get_pole_extras
+(results OUT SYS_REFCURSOR)
+AS
+BEGIN
+	OPEN results FOR
+	SELECT * FROM poste_extras
+END;
+/

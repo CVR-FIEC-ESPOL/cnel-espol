@@ -1,8 +1,8 @@
 
 
-var PolygonDrawer = function(map){ 
+var Drawer = function(map){ 
 	this.map = map;
-	this.data_points = []
+	this.polygon_vertices = []
 	this.points_reference_cfg = {
 	    strokeColor: '#FF0000',
 	    strokeOpacity: 0.8,
@@ -22,65 +22,57 @@ var PolygonDrawer = function(map){
   	//$("#remove_polygon").attr('disabled','disabled');
 
   	$("#select_pole").click(this.on_select_pole.bind(this));
-  	$("#remove_selected_pole").click(this.remove_selected_pole.bind(this));
-
+  	$("#remove_selected_pole").click(this.on_remove_selected_pole.bind(this));
   	$("#active_drawing").click(this.on_active_drawing.bind(this));
   	$("#draw_polygon" ).click(this.on_draw_polygon.bind(this));
-
   	$("#search_poles" ).click(this.on_search_poles.bind(this));
-  	$("#ok_search").click(this.search_location.bind(this));
+  	$("#ok_search").click(this.on_search_location.bind(this));
   	//$("#remove_polygon" ).click(this.on_remove_polygon.bind(this));
 }
  
+Drawer.prototype = Object.create(Observable.prototype);
 
-PolygonDrawer.prototype = Object.create(Observable.prototype);
-
-PolygonDrawer.prototype.set_state = function(state){
+Drawer.prototype.set_state = function(state){
 	if(this.state){
 		this.state.change();
 	}
 	this.state = state;
 }
 
-PolygonDrawer.prototype.add_data_point = function(location){
-	this.data_points.push(location);
+Drawer.prototype.add_polygon_vertex = function(location){
+	this.polygon_vertices.push(location);
 }
 
-PolygonDrawer.prototype.on_select_pole = function(){
+Drawer.prototype.on_select_pole = function(){
 	var current_state = new SingleMarker();
 	this.set_state(current_state);
 	this.state.do_action(this);
 }
 
-PolygonDrawer.prototype.remove_selected_pole = function(){
+Drawer.prototype.on_remove_selected_pole = function(){
 	var current_state = new RemoverSingleMarker();
 	this.set_state(current_state);
 	this.state.do_action(this);
 }
 
-PolygonDrawer.prototype.on_active_drawing = function(){
+Drawer.prototype.on_active_drawing = function(){
 	var current_state = new MarkerVertex();
 	this.set_state(current_state);
 	this.state.do_action(this);
 }
 
-PolygonDrawer.prototype.on_draw_polygon = function(){
+Drawer.prototype.on_draw_polygon = function(){
 	var current_state = new PolygonLinker();
 	this.set_state(current_state);
 	this.state.do_action(this);
 }
 
-PolygonDrawer.prototype.on_search_poles = function(){
+Drawer.prototype.on_search_poles = function(){
 	$('#modal_search').modal('show');
-	this.init_autocomplete();
+	autocomplete = new google.maps.places.Autocomplete(( document.getElementById('address') ),{ types: ['geocode'] });
 }
 
-PolygonDrawer.prototype.init_autocomplete = function() {
-  autocomplete = new google.maps.places.Autocomplete(( document.getElementById('address') ),{ types: ['geocode'] });
-  //autocomplete.addListener('place_changed', this.search_location);
-}
-
-PolygonDrawer.prototype.search_location = function(){
+Drawer.prototype.on_search_location = function(){
 	var address = document.getElementById('address').value;
 	console.log(address);
 	var geocoder = new google.maps.Geocoder();

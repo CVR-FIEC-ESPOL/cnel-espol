@@ -14,6 +14,7 @@
     <script src="//d3js.org/d3.v3.min.js" charset="utf-8"></script>
     <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC3GG1bWOb8u2eCEteiCY1yGnaKrqgW6R4&libraries=places"></script>
     <script type="text/javascript" src="lib/util.js"></script>
+    <script type="text/javascript" src="lib/pole_storage.js"></script>
     <script type="text/javascript" src="lib/observable.js"></script>
     <script type="text/javascript" src="lib/pole_data_manager.js"></script>
     <script type="text/javascript" src="lib/geo_layer.js"></script>
@@ -40,7 +41,6 @@
       </div>
       <div class="map-container col-xs-9 col-sm-9 col-md-9">
           <div class="map-options floating-panel col-md-12 row-flex align-items-center justify-content-center">
-
             <button id="select_pole" type="submit" class="btn btn-danger row-flex align-items-center">
               <label title="Seleccione el poste en donde desea registrar un tag" class="select_pole_icon"></label>
             </button>
@@ -59,6 +59,16 @@
             <button id="search_poles" type="submit" class="btn btn-primary">
               <label title="Obtenga información de los postes que estan dentro del poligono que ha dibujado" class="polygon_search_pole"></label>
             </button>
+          </div>
+          <div id="radio_container" class="map-filters floating-panel-bottom col-md-12 row-flex align-items-center justify-content-center">
+            <label class="btn btn-primary active">
+              <input type="radio" name="options" id="option1" autocomplete="off" value="1" checked>
+              Todos
+            </label>
+            <label class="btn btn-primary">
+              <input type="radio" name="options" id="option2" autocomplete="off" value="2">
+              Con Tag
+            </label>
           </div>
           <div id = "map" class="map-canvas col-md-12">
           </div>

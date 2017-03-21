@@ -5,9 +5,7 @@ var PoleOverlay = function(map,cfg,data){
 	this.data = data;
   this.setMap(map);
   this.initialize(cfg || {});
-  
   //this.observable = new Observable();
-
 };
 
 PoleOverlay.prototype = new google.maps.OverlayView();
