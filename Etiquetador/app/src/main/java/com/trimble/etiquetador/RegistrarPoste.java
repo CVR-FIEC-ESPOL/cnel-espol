@@ -5,44 +5,36 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
-import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
-import android.location.GpsStatus;
-import android.location.Location;
-import android.location.LocationListener;
-import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import com.trimble.etiquetador.model.Position;
 import com.trimble.etiquetador.model.Poste;
 
-import org.osgeo.proj4j.*;
-
 import java.util.ArrayList;
-
-import static com.trimble.mcs.barcode.v1.SettingsBase.mContext;
 
 public class RegistrarPoste extends Activity {
     private String[] sectores;
     private Spinner spinnersector;
-    private LocationManager locationManager;
-    public String GPSstatus;
     private DataBaseHelper myDbHelper;
-    private LocationListener locationListener;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.4F);
+    private static final String MyPREFERENCES = "LoginCNEL" ;
+    private String user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar_poste);
         this.sectores = new String[] {
+                "NO ESTA EN LISTA",
                 "10 DE AGOSTO",
                 "25 DE JULIO",
                 "4 DE NOVIEMBRE",
@@ -216,146 +208,70 @@ public class RegistrarPoste extends Activity {
                 "VALDIVIA",
                 "VALLE ALTO",
                 "VELEZ",
-                "VENEZUELA",
-                "NO ESTA EN LISTA"
+                "VENEZUELA"
         };
         spinnersector = (Spinner) findViewById(R.id.spinnerSector);
         ArrayAdapter<String> adapterSector = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, sectores);
         spinnersector.setAdapter(adapterSector);
-//        gpsWorker = new GpsWorker(this);
-//        gpsWorker.init();
-        locationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-        locationListener = new MyLocationListener();
-        locationManager.addGpsStatusListener(mGPSStatusListener);
-        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        SharedPreferences sharedpreferences = getSharedPreferences(MyPREFERENCES, Context.MODE_PRIVATE);
+        user = sharedpreferences.getString("user","");
     }
     public void registrarPoste(View view){
+        view.startAnimation(buttonClick);
         myDbHelper = new DataBaseHelper(this);
         myDbHelper.openDataBase();
         SQLiteDatabase db = myDbHelper.getReadableDatabase();
         EditText viewcodigoposte = (EditText) findViewById(R.id.codigoposte);
-        final String codigoposte = viewcodigoposte.getText().toString();
-        if(!codigoposte.equals("")){
-            Cursor c = db.rawQuery("SELECT * FROM postes WHERE posteid = '"+codigoposte.toUpperCase()+"';", null);
-            if(c.getCount() != 0){
-                final ArrayList<Poste> postes = new ArrayList<Poste>();
-                c.moveToFirst();
-                do{
-                    postes.add(new Poste(c.getString(c.getColumnIndex("posteid")), c.getString(c.getColumnIndex("alimentador")),c.getInt(c.getColumnIndex("_id")),c.getInt(c.getColumnIndex("ncables"))));
-                    c.moveToNext();
-                }while(!c.isAfterLast());
-                c.close();
-                db.close();
-                new AlertDialog.Builder(this)
-                        .setTitle("Código de poste repetido")
-                        .setMessage("Ya existen postes con el código ingresado.\n¿Desea editar un poste repetido?")
-                        .setIcon(android.R.drawable.ic_dialog_alert)
-                        .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int whichButton) {
-                                Intent intent = new Intent(RegistrarPoste.this,ListadoRepetidos.class);
-                                intent.putExtra("postes",postes);
-                                startActivity(intent);
-                            }})
-                        .setNegativeButton(android.R.string.no, null).show();
-            }
-            else{
-                if ( !locationManager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
-                    Toast toast = Toast.makeText(this,"GPS no detectado, está apagado?",Toast.LENGTH_SHORT);
-                    toast.setGravity(Gravity.TOP| Gravity.LEFT, 40, 380);
-                    toast.show();
-                }
-                else {
-                    if (GPSstatus.equals("GPS_LOCKED")) {
-                        Location currentLocation = locationManager.getLastKnownLocation(locationManager.GPS_PROVIDER);
-                        Position currentPosition = new Position(currentLocation.getLongitude(), currentLocation.getLatitude());
-                        String csName = "EPSG:32717";
-                        CoordinateTransformFactory ctFactory = new CoordinateTransformFactory();
-                        CRSFactory csFactory = new CRSFactory(this);
-                        CoordinateReferenceSystem crs = csFactory.createFromName(csName);
-                        final String WGS84_PARAM = "+title=long/lat:WGS84 +proj=longlat +ellps=WGS84 +datum=WGS84 +units=degrees";
-                        CoordinateReferenceSystem WGS84 = csFactory.createFromParameters("WGS84", WGS84_PARAM);
-                        CoordinateTransform trans = ctFactory.createTransform(WGS84, crs);
-                        ProjCoordinate p = new ProjCoordinate();
-                        ProjCoordinate p2 = new ProjCoordinate();
-                        p.x = currentPosition.getX();
-                        p.y = currentPosition.getY();
-                        trans.transform(p, p2);
-                        String alimentador = spinnersector.getSelectedItem().toString();
-                        String sql = "INSERT INTO postes (posteid,alimentador,x,y,usuario,estado) VALUES('"+codigoposte.toUpperCase()+"','"+alimentador+"',"+p2.x+","+p2.y+",'cnel',1);";
-                        db.execSQL(sql);
-                        c = db.rawQuery("SELECT * FROM postes WHERE posteid = '"+codigoposte.toUpperCase()+"';", null);
-                        c.moveToFirst();
-                        int idposte = c.getInt(c.getColumnIndex("_id"));
-                        c.close();
-                        db.close();
-                        locationManager.removeUpdates(locationListener);
-                        Intent intent = new Intent(RegistrarPoste.this, InfoPoste.class);
-                        intent.putExtra("IdPoste", idposte);
-                        intent.putExtra("CodigoPoste",codigoposte.toUpperCase());
-                        intent.putExtra("Sector",alimentador);
-                        intent.putExtra("NCables",0);
-                        startActivity(intent);
-                        Log.w("Position",p2.x+","+p2.y);
-
-                    } else if (GPSstatus.equals("GPS_SEARCHING")) {
-                        Toast toast = Toast.makeText(this, "Buscando su posición GPS...", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.TOP | Gravity.LEFT, 70, 380);
-                        toast.show();
-                    } else if (GPSstatus.equals("GPS_STOPPED")) {
-                        Toast toast = Toast.makeText(this, "El GPS se detuvo", Toast.LENGTH_SHORT);
-                        toast.setGravity(Gravity.TOP | Gravity.LEFT, 40, 380);
-                        toast.show();
-                    } else {
-                        Log.w("ERROR", GPSstatus);
-                    }
-                }
-            }
+        final String codigoposte = viewcodigoposte.getText().toString().toUpperCase();
+        Cursor c = db.rawQuery("SELECT * FROM postes WHERE codigoposte = '"+codigoposte+"';", null);
+        if(c.getCount() > 0 && !codigoposte.isEmpty()){
+            final ArrayList<Poste> postes = new ArrayList<Poste>();
+            c.moveToFirst();
+            do{
+                postes.add(new Poste(c.getString(c.getColumnIndex("codigoposte")), c.getString(c.getColumnIndex("alimentador")),c.getInt(c.getColumnIndex("_id")),c.getInt(c.getColumnIndex("ncables")), c.getString(c.getColumnIndex("uuid"))));
+                c.moveToNext();
+            }while(!c.isAfterLast());
             c.close();
             db.close();
+            new AlertDialog.Builder(this)
+                    .setTitle("Código de poste repetido")
+                    .setMessage("Existen postes con el código ingresado.\n¿Desea editarlo?")
+                    .setIcon(android.R.drawable.ic_dialog_alert)
+                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int whichButton) {
+                            Intent intent = new Intent(RegistrarPoste.this,ListadoRepetidos.class);
+                            intent.putExtra("postes",postes);
+                            startActivity(intent);
+                            finish();
+                        }})
+                    .setNegativeButton(android.R.string.no, null).show();
         }
         else{
-            Toast toast = Toast.makeText(this,"No se permite ingresar código vacio",Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.TOP| Gravity.LEFT, 40, 380);
-            toast.show();
-        }
-    }
-
-    public void regresarListadoPostes(View view){
-        locationManager.removeUpdates(locationListener);
-        Intent intent = new Intent(this, ListadoPostes.class);
-        startActivity(intent);
-    }
-
-    private class MyLocationListener implements LocationListener {
-        @Override
-        public void onLocationChanged(final Location loc) {
-        }
-
-        @Override
-        public void onProviderDisabled(String provider) {}
-
-        @Override
-        public void onProviderEnabled(String provider) {}
-
-        @Override
-        public void onStatusChanged(String provider, int status, Bundle extras) {}
-    }
-
-    public GpsStatus.Listener mGPSStatusListener = new GpsStatus.Listener() {
-        public void onGpsStatusChanged(int event) {
-            switch(event) {
-                case GpsStatus.GPS_EVENT_STARTED:
-                    GPSstatus = "GPS_SEARCHING";
-                    break;
-                case GpsStatus.GPS_EVENT_STOPPED:
-                    GPSstatus = "GPS_STOPPED";
-                    break;
-                case GpsStatus.GPS_EVENT_FIRST_FIX:
-                    GPSstatus = "GPS_LOCKED";
-                    break;
-                case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-                    break;
+            String alimentador = spinnersector.getSelectedItem().toString();
+            String sql = "INSERT INTO postes (codigoposte,alimentador,usuario,estado) VALUES('"+codigoposte+"','"+alimentador+"','"+user+"',1);";
+            db.execSQL(sql);
+            c = db.rawQuery("SELECT * FROM postes WHERE codigoposte = '"+codigoposte+"';", null);
+            c.moveToFirst();
+            int idposte = c.getInt(c.getColumnIndex("_id"));
+            c.close();
+            db.close();
+            Intent intent = new Intent(RegistrarPoste.this, InfoPoste.class);
+            intent.putExtra("IdPoste", idposte);
+            intent.putExtra("CodigoPoste",codigoposte);
+            intent.putExtra("Sector",alimentador);
+            intent.putExtra("NCables",0);
+            intent.putExtra("Ventana","listado");
+            myDbHelper.close();
+            startActivity(intent);
+            finish();
             }
-        }
-    };
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        startActivity(new Intent(this, ListadoPostes.class));
+        finish();
+    }
 }

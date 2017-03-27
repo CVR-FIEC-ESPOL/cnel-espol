@@ -6,23 +6,68 @@ android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizo
 android:paddingRight="@dimen/activity_horizontal_margin"
 android:paddingTop="@dimen/activity_vertical_margin"
 android:paddingBottom="@dimen/activity_vertical_margin"
-tools:context="com.trimble.etiquetador.InfoPoste">
+android:background="@color/blue"
+    tools:context="com.trimble.etiquetador.InfoPoste">
 
     <TextView
-        android:text="Cables registrados en el poste"
+        android:text="Código del Poste"
+        android:typeface="monospace"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView9"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true" />
+        />
 
     <TextView
-        android:text="Número de cables"
+        android:text="TextView"
+        android:typeface="monospace"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewcodigo"
+        android:layout_below="@id/textView9"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:text="Alimentador"
+        android:typeface="monospace"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/viewcodigo"
+        android:id="@+id/textView11"
+        android:layout_marginTop="15dp"
+        />
+
+    <TextView
+        android:text="TextView"
+        android:typeface="monospace"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/viewsector"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/textView11"
+        android:layout_centerHorizontal="true"
+        />
+
+    <TextView
+        android:text="Número aproximado de cables"
+        android:typeface="monospace"
+        android:textSize="15sp"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textView10"
-        android:layout_alignBottom="@+id/viewncable"
-        android:layout_alignParentLeft="true" />
+        android:layout_below="@id/viewsector"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        />
 
     <EditText
         android:imeOptions="actionDone"
@@ -31,85 +76,103 @@ tools:context="com.trimble.etiquetador.InfoPoste">
         android:layout_height="wrap_content"
         android:inputType="number"
         android:ems="2"
-        android:cursorVisible="false"
-        android:layout_marginTop="22dp"
+        android:textSize="20sp"
         android:id="@+id/viewncable"
-        android:layout_below="@+id/viewsector"
-        android:layout_toRightOf="@+id/textView10"
-        android:layout_marginLeft="19dp" />
+        android:layout_below="@+id/textView10"
+        android:layout_centerHorizontal="true"/>
 
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/viewcodigo"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentRight="true" />
-
-    <TextView
-        android:text="TextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/viewsector"
-        android:layout_marginTop="17dp"
-        android:layout_below="@+id/viewcodigo"
-        android:layout_alignParentRight="true" />
-
-    <Button
-        android:text="Guardar"
-        android:onClick="modifyNCable"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/guardar"
-        android:layout_alignBaseline="@+id/textView10"
-        android:layout_alignBottom="@+id/textView10"
-        android:layout_alignParentRight="true" />
-
-    <ListView
-        android:layout_width="match_parent"
-        android:layout_height="200dip"
-        android:id="@+id/listacables"
-        android:layout_marginTop="36dp"
-        android:layout_below="@+id/guardar"
-        android:layout_alignParentLeft="true" />
-
-    <Button
-        android:text="Regresar"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:onClick="regresarListadoPostes"
-        android:id="@+id/button5"
-        android:layout_alignBaseline="@+id/boton"
-        android:layout_alignBottom="@+id/boton"
-        android:layout_alignParentLeft="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:text="Finalizar"
-        android:id="@+id/fin"
-        android:onClick="returnListaPoste"
-        android:layout_alignBaseline="@+id/boton"
-        android:layout_alignBottom="@+id/boton"
-        android:layout_alignParentRight="true" />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
+    <ImageButton
+        android:layout_marginTop="220dp"
+        android:background="@drawable/barcodescanner80"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
         android:text="Agregar"
         android:id="@+id/boton"
-        android:layout_below="@+id/listacables"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="18dp" />
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="30dp" />
 
-    <!--
     <TextView
+        android:text="Escanear"
+        android:typeface="monospace"
+        android:textSize="15sp"
+        android:textColor="@color/white"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="xx"
-        android:freezesText="true"
-        android:id="@+id/txtCode"
-        android:layout_below="@+id/button"
-        android:layout_centerHorizontal="true" />
-      -->
+        android:id="@+id/textView12"
+        android:layout_below="@id/boton"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="24dp"
+        />
+
+    <ImageButton
+        android:layout_marginTop="220dp"
+        android:background="@drawable/rfidsensor80"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:onClick="openRfid"
+        android:id="@+id/btnRfid"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        />
+
+    <TextView
+        android:text="Verificar"
+        android:typeface="monospace"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView13"
+        android:layout_below="@id/btnRfid"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="15dp"
+        android:layout_alignParentRight="true"
+        />
+
+    <ImageButton
+        android:layout_marginTop="320dp"
+        android:onClick="takePictures"
+        android:background="@drawable/camera80"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/button20"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="30dp" />
+
+    <TextView
+        android:text="Imágenes"
+        android:typeface="monospace"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView1"
+        android:layout_below="@id/button20"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="23dp"
+        android:layout_alignParentLeft="true"/>
+
+    <ImageButton
+        android:layout_marginTop="320dp"
+        android:onClick="cablesFeatures"
+        android:background="@drawable/tags80"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/button10"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp" />
+
+    <TextView
+        android:text="Caracterizar"
+        android:typeface="monospace"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView14"
+        android:layout_below="@id/button10"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        />
 </RelativeLayout>

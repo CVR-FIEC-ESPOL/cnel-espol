@@ -1,20 +1,14 @@
 package com.trimble.etiquetador;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.trimble.etiquetador.adapters.PosteAdapter;
 import com.trimble.etiquetador.model.Poste;
@@ -25,7 +19,6 @@ public class ListadoRepetidos extends Activity {
     protected DataBaseHelper myDbHelper;
     protected ArrayList<Poste> postes = new ArrayList<Poste>();
     protected PosteAdapter posteadapter;
-    protected InputMethodManager inputManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +42,8 @@ public class ListadoRepetidos extends Activity {
                 intent.putExtra("CodigoPoste",tmpposte.getCodigo());
                 intent.putExtra("Sector",tmpposte.getSector());
                 intent.putExtra("NCables",tmpposte.getNcables());
+                intent.putExtra("Ventana","listado");
+                intent.putExtra("uuid",tmpposte.getUuid());
                 postes.clear();
                 posteadapter.notifyDataSetChanged();
                 SQLiteDatabase db = myDbHelper.getReadableDatabase();
@@ -56,15 +51,19 @@ public class ListadoRepetidos extends Activity {
                 db.execSQL(mySql);
                 db.close();
                 startActivity(intent);
+                finish();
             }
         });
         listviewPoste.setAdapter(posteadapter);
-        inputManager = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-
     }
 
-    public void regresarRegistrarPoste(View view){
-        Intent intent = new Intent(this, RegistrarPoste.class);
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        Intent intent = new Intent(this, ListadoPostes.class);
+        myDbHelper.close();
         startActivity(intent);
+        finish();
     }
 }

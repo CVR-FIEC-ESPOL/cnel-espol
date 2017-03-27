@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -19,16 +20,16 @@ import com.trimble.etiquetador.model.Poste;
 import java.util.ArrayList;
 
 public class PostesPendientes extends Activity {
-    protected DataBaseHelper myDbHelper;
-    protected static ArrayList<Poste> postes = new ArrayList<Poste>();
-    protected PosteAdapter posteadapter;
+    private static ArrayList<Poste> postes = new ArrayList<Poste>();
+    private static PosteAdapter posteadapter;
+    private DataBaseHelper myDbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_postes_pendientes);
         final ListView listviewPoste = (ListView) findViewById(R.id.postesPendientes);
-        myDbHelper = new DataBaseHelper(this);
+        myDbHelper = new DataBaseHelper(PostesPendientes.this);
         try {
             myDbHelper.openDataBase();
         }catch(SQLException sqle){
@@ -44,9 +45,12 @@ public class PostesPendientes extends Activity {
                 intent.putExtra("CodigoPoste",tmpposte.getCodigo());
                 intent.putExtra("Sector",tmpposte.getSector());
                 intent.putExtra("NCables",tmpposte.getNcables());
+                intent.putExtra("Ventana","pendientes");
+                intent.putExtra("uuid",tmpposte.getUuid());
                 postes.clear();
                 posteadapter.notifyDataSetChanged();
                 startActivity(intent);
+                finish();
             }
         });
         listviewPoste.setAdapter(posteadapter);
@@ -56,16 +60,21 @@ public class PostesPendientes extends Activity {
         c.moveToFirst();
         posteadapter.notifyDataSetChanged();
         do{
-            postes.add(new Poste(c.getString(c.getColumnIndex("posteid")), c.getString(c.getColumnIndex("alimentador")),c.getInt(c.getColumnIndex("_id")),c.getInt(c.getColumnIndex("ncables"))));
+            postes.add(new Poste(c.getString(c.getColumnIndex("codigoposte")), c.getString(c.getColumnIndex("alimentador")),c.getInt(c.getColumnIndex("_id")),c.getInt(c.getColumnIndex("ncables")), c.getString(c.getColumnIndex("uuid"))));
             c.moveToNext();
         }while(!c.isAfterLast());
+        c.close();
+        db.close();
 
     }
-
-    public void regresarListadoPostes(View view){
-        Intent intent = new Intent(PostesPendientes.this, ListadoPostes.class);
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
         postes.clear();
         posteadapter.notifyDataSetChanged();
-        startActivity(intent);
+        startActivity(new Intent(this, Menu.class));
+        finish();
     }
+
 }

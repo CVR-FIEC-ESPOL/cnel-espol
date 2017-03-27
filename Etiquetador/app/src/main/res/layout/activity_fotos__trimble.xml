@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/activity_fotos__trimble"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/blue"
+    tools:context="com.trimble.etiquetador.Fotos_Trimble">
+
+    <TextView
+        android:text="Foto del Poste"
+        android:typeface="monospace"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView14"
+        android:layout_centerHorizontal="true"
+        />
+
+    <ImageButton
+        android:background="@drawable/poste"
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:onClick="takePicturePoste"
+        android:id="@+id/fotoposte"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/textView14"
+        android:layout_centerHorizontal="true" />
+
+    <ImageView
+        android:layout_marginTop="15dp"
+        android:background="@android:drawable/divider_horizontal_dim_dark"
+        android:layout_width="200dp"
+        android:layout_height="5dp"
+        android:id="@+id/line"
+        android:layout_below="@id/fotoposte"
+        android:layout_centerHorizontal="true"/>
+
+    <TextView
+        android:text="Foto de los Cables"
+        android:typeface="monospace"
+        android:textSize="15sp"
+        android:textColor="@color/white"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView1"
+        android:layout_marginTop="15dp"
+        android:layout_below="@+id/line"
+        android:layout_centerHorizontal="true" />
+
+    <ImageButton
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rope96"
+        android:onClick="takePictureCables"
+        android:layout_width="120dp"
+        android:layout_height="150dp"
+        android:id="@+id/fotocables"
+        android:layout_below="@id/textView1"
+        android:layout_centerHorizontal="true"/>
+
+
+
+</RelativeLayout>

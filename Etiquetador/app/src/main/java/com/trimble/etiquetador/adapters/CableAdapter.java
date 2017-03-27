@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.trimble.etiquetador.R;
@@ -23,11 +24,11 @@ public class CableAdapter extends ArrayAdapter<Cable> {
     }
 
     static class ViewHolder{
-        public TextView tagid;
-        public TextView operadora;
-        public TextView tipo;
-        public TextView uso;
-        public TextView escable;
+        TextView tagid;
+        TextView operadora;
+        TextView tipo;
+        ImageView viewcables;
+        ImageView viewoperadora;
     }
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
@@ -37,21 +38,23 @@ public class CableAdapter extends ArrayAdapter<Cable> {
             viewHolder.tagid = (TextView) convertView.findViewById(R.id.viewtagid);
             viewHolder.operadora = (TextView) convertView.findViewById(R.id.viewoperadora);
             viewHolder.tipo = (TextView) convertView.findViewById(R.id.viewtipo);
-            viewHolder.uso = (TextView) convertView.findViewById(R.id.viewuso);
-            viewHolder.escable = (TextView) convertView.findViewById(R.id.viewescable);
+            viewHolder.viewcables = (ImageView) convertView.findViewById(R.id.viewcables);
+            viewHolder.viewoperadora = (ImageView) convertView.findViewById(R.id.viewimageoperadora);
             convertView.setTag(viewHolder);
         }
         ViewHolder holder = (ViewHolder) convertView.getTag();
         final Cable currentCable = this.cables.get(position);
-        holder.tagid.setText("TagId: "+currentCable.getTagid());
-        holder.operadora.setText("Operadora: "+currentCable.getOperadora());
-        holder.tipo.setText("Tipo: "+currentCable.getTipo());
-        holder.uso.setText("Uso: "+currentCable.getUso());
-        if(currentCable.isEscable()){
-            holder.escable.setText("Cable");
+        holder.tagid.setText(currentCable.getTagid());
+        if(currentCable.isEscable() == 1){
+            holder.viewcables.setBackgroundResource(R.drawable.cablerelease96);
+            holder.operadora.setText(currentCable.getOperadora_name());
+            holder.tipo.setText(currentCable.getTipo());
         }
-        else{
-            holder.escable.setText("Equipo de Telecomunicaciones");
+        else if(currentCable.isEscable() == 2){
+            holder.viewcables.setBackgroundResource(R.drawable.rj4580);
+            holder.tipo.setText(currentCable.getTipo());
+            holder.operadora.setVisibility(View.INVISIBLE);
+            holder.viewoperadora.setVisibility(View.INVISIBLE);
         }
         return convertView;
     }

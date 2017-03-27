@@ -7,171 +7,235 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 public class RegistrarCable extends Activity {
-    private int modificarVal;
     private String codigoposte;
     private int posteid;
-    private String sector;
     private String tagid;
-    private String[] uso;
     private String[] tipo;
-    private String[] operadora;
+    private ArrayList <String> operadora;
     private DataBaseHelper myDbHelper;
-    private Spinner spinneruso;
+    private TextView viewAdditional;
+    private TextView viewTipo;
+    private TextView viewOperadora;
     private Spinner spinnertipo;
     private Spinner spinneroperadora;
-
+    private CheckBox checkboxCable;
+    private EditText numbersofitems;
+    private EditText dimensions;
+    private AlphaAnimation buttonClick = new AlphaAnimation(1F, 0.4F);
     //    private GpsWorker gpsWorker;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registrar_cable);
+        myDbHelper = new DataBaseHelper(this);
+        try {
+            myDbHelper.openDataBase();
+        }catch(SQLException sqle){
+            Log.w("Database",sqle.getMessage());
+        }
+        this.operadora = new ArrayList<String>();
+        this.operadora.add("NO ENCONTRADA");
+        SQLiteDatabase db = myDbHelper.getReadableDatabase();
+        String mySql = "SELECT nombre FROM operadoras ORDER BY _id;";
+        Cursor c = db.rawQuery(mySql, null);
+        if(c.getCount() > 0){
+            c.moveToFirst();
+            String operadora_str;
+            do{
+                operadora_str = c.getString(c.getColumnIndex("nombre"));
+                this.operadora.add(operadora_str);
+                c.moveToNext();
+            }while (!c.isAfterLast());
+        }
         Intent intent = getIntent();
-        posteid = intent.getIntExtra("posteId",0);
-        codigoposte = intent.getStringExtra("codigoPoste");
-        sector = intent.getStringExtra("sector");
+        posteid = intent.getIntExtra("posteid", 0);
+        codigoposte = intent.getStringExtra("codigoposte");
         tagid = intent.getStringExtra("barCode");
-        modificarVal = intent.getIntExtra("modificar",0);
+        final int tipoEquipo = intent.getIntExtra("escable",0);
         TextView viewcodigoPoste = (TextView) findViewById(R.id.viewposteid);
-        TextView viewsector = (TextView) findViewById(R.id.viewsectorcable);
         TextView viewtagid = (TextView) findViewById(R.id.viewtagidcable);
         viewcodigoPoste.setText(codigoposte);
-        viewsector.setText(sector);
         viewtagid.setText(tagid);
-        this.uso = new String[] {"Distribución","Acometida"};
-        this.tipo = new String[] {"Fibra","Cobre multipar"};
-        this.operadora = new String[] {"Claro","Netlife","TVCable"};
-        spinneruso = (Spinner) findViewById(R.id.spinnerUso);
+        viewAdditional = (TextView) findViewById(R.id.textView17);
+        numbersofitems = (EditText) findViewById(R.id.numberofitems);
+        viewOperadora = (TextView) findViewById(R.id.textView14);
+        dimensions = (EditText) findViewById(R.id.viewdimension);
+        viewTipo = (TextView) findViewById(R.id.textView15);
+        this.tipo = new String[]{"FIBRA", "MULTIPAR", "RG500"};
         spinnertipo = (Spinner) findViewById(R.id.spinnerTipo);
         spinneroperadora = (Spinner) findViewById(R.id.spinnerOperadora);
-        ArrayAdapter<String> adapterUso = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, uso);
-        spinneruso.setAdapter(adapterUso);
-        ArrayAdapter<String> adaptertipo = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, tipo);
+        ArrayAdapter<String> adaptertipo = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, tipo);
         spinnertipo.setAdapter(adaptertipo);
-        ArrayAdapter<String> adapteroperadora = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, operadora);
+        ArrayAdapter<String> adapteroperadora = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, this.operadora);
         spinneroperadora.setAdapter(adapteroperadora);
-        Button eliminar = (Button) findViewById(R.id.eliminar);
-        Button modificar = (Button) findViewById(R.id.modificar);
-        if(modificarVal == 0){
-            eliminar.setVisibility(View.GONE);
-            modificar.setVisibility(View.GONE);
+        checkboxCable = (CheckBox) findViewById(R.id.checkBoxCable);
+        checkboxCable.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+             @Override
+             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                 if (checkboxCable.isChecked()) {
+                     tipo = new String[]{"CAJA FUENTE", "VDT"};
+                     ArrayAdapter<String> adapteroperadora = new ArrayAdapter<String>(RegistrarCable.this, android.R.layout.simple_spinner_item, tipo);
+                     spinneroperadora.setAdapter(adapteroperadora);
+                     viewOperadora.setText("Equipo:");
+                     spinnertipo.setVisibility(View.INVISIBLE);
+                     dimensions.setVisibility(View.GONE);
+                     viewTipo.setVisibility(View.INVISIBLE);
+                     viewAdditional.setVisibility(View.INVISIBLE);
+                     numbersofitems.setVisibility(View.INVISIBLE);
+                 } else {
+                     ArrayAdapter<String> adapteroperadora = new ArrayAdapter<String>(RegistrarCable.this, android.R.layout.simple_spinner_item, operadora);
+                     spinnertipo.setSelection(0);
+                     viewTipo.setText("Tipo:");
+                     spinneroperadora.setAdapter(adapteroperadora);
+                     viewOperadora.setText("Operadora:");
+                     spinnertipo.setVisibility(View.VISIBLE);
+                     viewTipo.setVisibility(View.VISIBLE);
+                     viewAdditional.setVisibility(View.VISIBLE);
+                     dimensions.setVisibility(View.GONE);
+                     numbersofitems.setVisibility(View.VISIBLE);
+                 }
+            }
+            }
+        );
+        spinneroperadora.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String operadora = parentView.getSelectedItem().toString();
+                if (operadora.equals("CAJA FUENTE")) {
+                    viewTipo.setText("Dimensiones:");
+                    viewTipo.setVisibility(View.VISIBLE);
+                    dimensions.setVisibility(View.VISIBLE);
+                } else if(operadora.equals("VDT")) {
+                    dimensions.setVisibility(View.GONE);
+                    viewTipo.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+
+        spinnertipo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                String tipo = parentView.getSelectedItem().toString();
+                if (tipo.equals("FIBRA")) {
+                    viewAdditional.setText("# Hilos:");
+                    viewAdditional.setVisibility(View.VISIBLE);
+                    numbersofitems.setVisibility(View.VISIBLE);
+                } else if (tipo.equals("MULTIPAR")) {
+                    viewAdditional.setText("# Pares:");
+                    viewAdditional.setVisibility(View.VISIBLE);
+                    numbersofitems.setVisibility(View.VISIBLE);
+                } else {
+                    viewAdditional.setVisibility(View.INVISIBLE);
+                    numbersofitems.setVisibility(View.INVISIBLE);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                // your code here
+            }
+
+        });
+        if(tipoEquipo == 1){
+            String lastoperadora = intent.getStringExtra("operadora");
+            String lasttipo = intent.getStringExtra("tipo");
+            int numberfeature = 0;
+            if(lasttipo.equals("FIBRA")){
+                numberfeature = intent.getIntExtra("nhilos",0);
+                viewAdditional.setText("# Hilos:");
+            }
+            else if(lasttipo.equals("MULTIPAR")){
+                numberfeature = intent.getIntExtra("npares",0);
+                viewAdditional.setText("# Pares:");
+            }
+            int indexOperadora = Arrays.asList(operadora).indexOf(lastoperadora);
+            int indexTipo = Arrays.asList(tipo).indexOf(lasttipo);
+            spinneroperadora.setSelection(indexOperadora);
+            spinnertipo.setSelection(indexTipo);
+            numbersofitems.setText(Integer.toString(numberfeature));
         }
-        else{
-            eliminar.setVisibility(View.VISIBLE);
-            modificar.setVisibility(View.VISIBLE);
-            Button registrar = (Button) findViewById(R.id.registrar);
-            registrar.setVisibility(View.GONE);
+        else if(tipoEquipo == 2){
+            checkboxCable.setChecked(true);
+            spinnertipo.setSelection(2);
         }
-//        gpsWorker = new GpsWorker(this);
-//        gpsWorker.init();
-//        Position currentPosition = gpsWorker.getCurrentPosition();
-//        Log.w("GPS",Double.toString(currentPosition.getX()));
-//        Log.w("GPS2",Double.toString(currentPosition.getY()));
     }
 
-    public void regresarListadoCables(View view){
-        myDbHelper = new DataBaseHelper(this);
-        try {
-            myDbHelper.openDataBase();
-        }catch(SQLException sqle){
-            Log.w("Database",sqle.getMessage());
-        }
-        SQLiteDatabase db = myDbHelper.getReadableDatabase();
-        Cursor c = db.rawQuery("SELECT ncables FROM postes WHERE _id = '"+posteid+"';", null);
-        c.moveToFirst();
-        int ncables = c.getInt(c.getColumnIndex("ncables"));
-        db.close();
-        c.close();
-        Intent intent = new Intent(this, InfoPoste.class);
-        intent.putExtra("NCables", ncables);
-        startActivity(intent);
-    }
-
-    public void eliminarCable(View view){
-        myDbHelper = new DataBaseHelper(this);
-        try {
-            myDbHelper.openDataBase();
-        }catch(SQLException sqle){
-            Log.w("Database",sqle.getMessage());
-        }
-        SQLiteDatabase db = myDbHelper.getReadableDatabase();
-        String mySql = "DELETE FROM cables WHERE _id = '"+tagid+"'";
-        db.execSQL(mySql);
-        mySql = "UPDATE postes SET ncables = ncables - 1 WHERE _id = '"+posteid+"';";
-        db.execSQL(mySql);
-        Cursor c = db.rawQuery("SELECT ncables FROM postes WHERE _id = '"+posteid+"';", null);
-        c.moveToFirst();
-        int ncables = c.getInt(c.getColumnIndex("ncables"));
-        db.close();
-        Intent intent = new Intent(this, InfoPoste.class);
-        intent.putExtra("NCables", ncables);
-        startActivity(intent);
-    }
 
     public void modificarCable(View view){
+        view.startAnimation(buttonClick);
         String tipoCable = spinnertipo.getSelectedItem().toString();
-        String usoCable = spinneruso.getSelectedItem().toString();
         String operadoraCable = spinneroperadora.getSelectedItem().toString();
         CheckBox checkboxCable = (CheckBox) findViewById(R.id.checkBoxCable);
-        int escable;
-        if(checkboxCable.isChecked())
-            escable = 1;
-        else
-            escable = 0;
-        myDbHelper = new DataBaseHelper(this);
-        try {
-            myDbHelper.openDataBase();
-        }catch(SQLException sqle){
-            Log.w("Database",sqle.getMessage());
-        }
         SQLiteDatabase db = myDbHelper.getReadableDatabase();
-        String mySql = "UPDATE cables SET tipo ='"+tipoCable+"',uso ='"+usoCable+"',escable ="+escable+",operadora ='"+operadoraCable+"',usuario = 'cnel' WHERE _id = '"+tagid+"';";
+        String mySql = "";
+        if(checkboxCable.isChecked()){
+            if(operadoraCable.equals("CAJA FUENTE")){
+                mySql = "UPDATE cables SET uso ='DISTRIBUCION',operadora= 0,npares=0,nhilos=0,escable ="+2+",dimension='"+dimensions.getText().toString()+"',tipo ='"+operadoraCable+"' WHERE _id = '"+tagid+"';";
+            }
+            else{
+                mySql = "UPDATE cables SET uso ='DISTRIBUCION',operadora= 0,npares=0,nhilos=0,escable ="+2+",dimension='',tipo ='"+operadoraCable+"' WHERE _id = '"+tagid+"';";
+            }
+        }
+        else{
+            int operadora_id;
+            if(operadoraCable.equals("NO ENCONTRADA")){
+                operadora_id = 0;
+            }
+            else{
+                mySql = "SELECT _id FROM operadoras WHERE nombre = '"+operadoraCable+"';";
+                Cursor c = db.rawQuery(mySql, null);
+                c.moveToFirst();
+                operadora_id = c.getInt(c.getColumnIndex("_id"));
+                c.close();
+            }
+            if(tipoCable.equals("FIBRA")){
+                mySql = "UPDATE cables SET tipo ='"+tipoCable+"',escable ="+1+",operadora = "+operadora_id+" ,operadora_name = '"+operadoraCable+"' , uso='DISTRIBUCION', dimension='', nhilos = '"+numbersofitems.getText().toString()+"', npares = 0 WHERE _id = '"+tagid+"';";
+            }
+            else if(tipoCable.equals("MULTIPAR")){
+                mySql = "UPDATE cables SET tipo ='"+tipoCable+"',escable ="+1+",operadora = "+operadora_id+" ,operadora_name = '"+operadoraCable+"' , uso='DISTRIBUCION', dimension='', npares = '"+numbersofitems.getText().toString()+"', nhilos = 0 WHERE _id = '"+tagid+"';";
+            }
+            else{
+                mySql = "UPDATE cables SET tipo ='"+tipoCable+"',escable ="+1+",operadora = "+operadora_id+" ,operadora_name = '"+operadoraCable+"' , uso='DISTRIBUCION', dimension='', npares = 0, nhilos = 0 WHERE _id = '"+tagid+"';";
+            }
+        }
         db.execSQL(mySql);
-        Cursor c = db.rawQuery("SELECT ncables FROM postes WHERE _id = '"+posteid+"';", null);
-        c.moveToFirst();
-        int ncables = c.getInt(c.getColumnIndex("ncables"));
         db.close();
-        Intent intent = new Intent(this, InfoPoste.class);
-        intent.putExtra("NCables", ncables);
+        Intent intent = new Intent(this, ListadoCables.class);
+        intent.putExtra("posteid",posteid);
+        intent.putExtra("codigoposte",codigoposte);
         startActivity(intent);
+        finish();
     }
 
-    public void registrarCableBase(View view){
-        String tipoCable = spinnertipo.getSelectedItem().toString();
-        String usoCable = spinneruso.getSelectedItem().toString();
-        String operadoraCable = spinneroperadora.getSelectedItem().toString();
-        CheckBox checkboxCable = (CheckBox) findViewById(R.id.checkBoxCable);
-        int escable;
-        if(checkboxCable.isChecked())
-            escable = 1;
-        else
-            escable = 0;
-        myDbHelper = new DataBaseHelper(this);
-        try {
-            myDbHelper.openDataBase();
-        }catch(SQLException sqle){
-            Log.w("Database",sqle.getMessage());
-        }
-        SQLiteDatabase db = myDbHelper.getReadableDatabase();
-        String mySql = "INSERT INTO cables (_id,posteid,tipo,uso,escable,operadora,usuario) VALUES ('"+tagid+"','"+posteid+"','"+tipoCable+"','"+usoCable+"',"+escable+",'"+operadoraCable+"','cnel');";
-        db.execSQL(mySql);
-        mySql = "UPDATE postes SET ncables = ncables + 1 WHERE _id = '"+posteid+"';";
-        db.execSQL(mySql);
-        Cursor c = db.rawQuery("SELECT ncables FROM postes WHERE _id = '"+posteid+"';", null);
-        c.moveToFirst();
-        Intent intent = new Intent(this, InfoPoste.class);
-        int ncables = c.getInt(c.getColumnIndex("ncables"));
-        intent.putExtra("NCables", ncables);
-        c.close();
-        db.close();
+    @Override
+    public void onBackPressed()
+    {
+        super.onBackPressed();
+        Intent intent = new Intent(this, ListadoCables.class);
+        intent.putExtra("posteid",posteid);
+        intent.putExtra("codigoposte",codigoposte);
         startActivity(intent);
+        finish();
     }
 }

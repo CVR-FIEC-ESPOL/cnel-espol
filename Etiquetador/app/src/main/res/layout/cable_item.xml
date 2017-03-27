@@ -1,40 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
 
+        <ImageView
+            android:layout_marginLeft="10dp"
+            android:background="@drawable/questions96"
+            android:id="@+id/viewcables"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
+            />
 
-        <TextView
-            android:id="@+id/viewescable"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="textview"
-            android:gravity="left"/>
-        <TextView
-            android:id="@+id/viewtipo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="textview"
-            android:gravity="left"/>
-
-        <TextView
-            android:id="@+id/viewuso"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="textview"
-            android:gravity="left"/>
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/barcode"
+            android:layout_toRightOf="@id/viewcables"/>
 
         <TextView
             android:id="@+id/viewtagid"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:typeface="monospace"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="20dp"
+            android:layout_marginLeft="50dp"
             android:text="textview"
-            android:gravity="left"/>
+            android:layout_toRightOf="@id/viewcables"/>
+
+        <ImageView
+            android:layout_marginLeft="20dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/mechanicalspring80"
+            android:layout_below="@id/viewtagid"
+            android:layout_toRightOf="@id/viewcables"/>
+
+        <TextView
+            android:id="@+id/viewtipo"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:typeface="monospace"
+            android:layout_width="match_parent"
+            android:layout_marginLeft="50dp"
+            android:layout_height="20dp"
+            android:text="NA"
+            android:layout_toRightOf="@id/viewcables"
+            android:layout_below="@id/viewtagid"
+            />
+
+        <ImageView
+            android:id="@+id/viewimageoperadora"
+            android:layout_marginLeft="20dp"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:background="@drawable/organization80"
+            android:layout_below="@id/viewtipo"
+            android:layout_toRightOf="@id/viewcables"/>
 
         <TextView
             android:id="@+id/viewoperadora"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:typeface="monospace"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="textview"
-            android:gravity="left"/>
-</LinearLayout>
+            android:layout_marginLeft="50dp"
+            android:layout_height="20dp"
+            android:text="NA"
+            android:layout_toRightOf="@id/viewcables"
+            android:layout_below="@id/viewtipo"
+            />
+</RelativeLayout>

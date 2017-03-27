@@ -5,33 +5,61 @@
     density="hdpi"
     format="8"
     plugin-version="2.2.3"
-    timestamp="154811046947294"
+    timestamp="493410188558832"
     token="1488141791126656948"
-    verifier="FULL_BUILD_REQUESTED" >
+    verifier="COMPATIBLE" >
 
     <task
         name="javac"
-        duration="0" />
+        duration="231" />
     <task
         name="instant-run-dex"
-        duration="0" />
+        duration="293" />
     <task
         name="instant-run-transform"
-        duration="0" />
+        duration="23" />
     <task
         name="verifier"
-        duration="0" />
+        duration="1" />
 
     <artifact
-        location="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\outputs\apk\app-debug.apk"
-        type="MAIN" />
+        location="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\reload-dex\debug\classes.dex"
+        type="RELOAD_DEX" />
 
     <build
-        timestamp="154811046947294"
-        verifier="FULL_BUILD_REQUESTED" >
+        timestamp="493177470218272"
+        verifier="METHOD_ADDED" >
         <artifact
             location="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\outputs\apk\app-debug.apk"
             type="MAIN" />
+    </build>
+    <build
+        timestamp="493363627330998"
+        verifier="COMPATIBLE" >
+        <artifact
+            location="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\builds\debug\493363627330998\classes.dex"
+            type="RELOAD_DEX" />
+    </build>
+    <build
+        timestamp="493374809122063"
+        verifier="COMPATIBLE" >
+        <artifact
+            location="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\builds\debug\493374809122063\classes.dex"
+            type="RELOAD_DEX" />
+    </build>
+    <build
+        timestamp="493396696173892"
+        verifier="COMPATIBLE" >
+        <artifact
+            location="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\builds\debug\493396696173892\classes.dex"
+            type="RELOAD_DEX" />
+    </build>
+    <build
+        timestamp="493410188558832"
+        verifier="COMPATIBLE" >
+        <artifact
+            location="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\reload-dex\debug\classes.dex"
+            type="RELOAD_DEX" />
     </build>
 
 </instant-run>

@@ -6,8 +6,19 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/blue"
     tools:context=".Etiquetador" >
 
+    <TextView
+        android:text="User"
+        android:typeface="monospace"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView"
+        android:layout_marginTop="8dp"
+        android:layout_centerHorizontal="true" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -15,31 +26,21 @@
         android:inputType="textPersonName"
         android:ems="10"
         android:id="@+id/user"
-        android:textColor="@android:color/black"
-        android:background="@android:color/darker_gray"
-        android:layout_marginBottom="79dp"
-        android:layout_above="@+id/password"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp"
+        android:layout_below="@id/textView"
         android:layout_centerHorizontal="true"/>
 
     <TextView
-        android:text="User"
+        android:typeface="monospace"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:text="Password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView"
-        android:textColor="@android:color/white"
-        android:layout_marginBottom="8dp"
-        android:layout_above="@+id/user"
-        android:layout_centerHorizontal="true" />
-
-    <Button
-        android:text="Login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/fin"
-        android:textColor="@android:color/white"
-        android:onClick="verifyUser"
-        android:layout_marginBottom="133dp"
-        android:layout_alignParentBottom="true"
+        android:id="@+id/textView2"
+        android:layout_below="@id/user"
+        android:layout_marginTop="50dp"
         android:layout_centerHorizontal="true" />
 
     <EditText
@@ -48,20 +49,30 @@
         android:inputType="textPassword"
         android:ems="10"
         android:id="@+id/password"
-        android:textColor="@android:color/black"
-        android:background="@android:color/darker_gray"
-        android:layout_marginBottom="69dp"
-        android:layout_above="@+id/fin"
+        android:layout_below="@id/textView2"
+        android:textColor="@android:color/white"
+        android:layout_marginTop="10dp"
         android:layout_alignLeft="@+id/user" />
 
-    <TextView
-        android:text="Password"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textView2"
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/fin"
+        android:background="@drawable/usercredentials80"
         android:textColor="@android:color/white"
-        android:layout_marginBottom="9dp"
-        android:layout_above="@+id/password"
+        android:onClick="verifyUser"
+        android:layout_below="@id/password"
+        android:layout_marginTop="80dp"
         android:layout_centerHorizontal="true" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Login"
+        android:layout_marginTop="5dp"
+        android:layout_below="@id/fin"
+        android:layout_centerHorizontal="true"
+        android:typeface="monospace"
+        android:textColor="@color/white"
+        android:textSize="15sp"/>
 </RelativeLayout>

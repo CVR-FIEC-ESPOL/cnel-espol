@@ -11,14 +11,19 @@
     <uses-permission android:name="com.trimble.mcs.permission.ACCESS_FLASHLIGHT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_GPS" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- Don't require camera, as this requires a rear camera. This allows it to work on the Nexus 7 -->
+    <uses-permission android:name="com.trimble.mcs.rfid.ACCESS_RFID" />
+
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="true" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+
     <uses-feature
         android:name="android.hardware.camera.front"
         android:required="false" /> <!-- TODO replace above two with next line after Android 4.2 -->
@@ -38,7 +43,7 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/cnel"
         android:label="Etiquetador" >
         <uses-library
             android:name="com.trimble.mcs"
@@ -55,18 +60,49 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.trimble.etiquetador.ListadoPostes" />
-        <activity android:name="com.trimble.etiquetador.Menu" />
-        <activity android:name="com.trimble.etiquetador.AddPoste" />
+        <activity
+            android:name="com.trimble.etiquetador.ListadoPostes"
+            android:label="Nueva Medición"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.trimble.etiquetador.Menu"
+            android:label="Menú" />
         <activity
             android:name="com.trimble.etiquetador.InfoPoste"
+            android:label="Mediciones Poste"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name="com.trimble.etiquetador.CaptureActivityPortrait" />
         <activity android:name="com.trimble.etiquetador.ConfirmationActivity" />
-        <activity android:name="com.trimble.etiquetador.RegistrarCable" />
-        <activity android:name="com.trimble.etiquetador.PostesPendientes" />
-        <activity android:name="com.trimble.etiquetador.RegistrarPoste" />
-        <activity android:name="com.trimble.etiquetador.ListadoRepetidos" />
+        <activity
+            android:name="com.trimble.etiquetador.RegistrarCable"
+            android:label="Características" />
+        <activity
+            android:name="com.trimble.etiquetador.PostesPendientes"
+            android:label="Postes Pendientes" />
+        <activity
+            android:name="com.trimble.etiquetador.RegistrarPoste"
+            android:label="Registrar Nuevo Poste" />
+        <activity
+            android:name="com.trimble.etiquetador.ListadoRepetidos"
+            android:label="Postes Registrados" />
+        <activity
+            android:name="com.trimble.etiquetador.listaFinalizados"
+            android:label="Postes Finalizados" />
+        <activity
+            android:name="com.trimble.etiquetador.RfidActivity"
+            android:label="Verificar Tags" />
+        <activity
+            android:name="com.trimble.etiquetador.ListadoCables"
+            android:label="Caracterizar Poste"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name="com.trimble.etiquetador.Fotos_Trimble"
+            android:label="Imágenes" />
+        <activity
+            android:name="com.trimble.etiquetador.Transferir"
+            android:hardwareAccelerated="false"
+            android:label="Transfiriendo postes" />
+        <activity android:name="com.trimble.etiquetador.Sincronizar" />
         <activity
             android:name="com.journeyapps.barcodescanner.CaptureActivity"
             android:clearTaskOnLaunch="true"

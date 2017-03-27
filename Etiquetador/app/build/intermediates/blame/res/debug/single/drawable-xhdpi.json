@@ -1,6 +1,134 @@
 [
     {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\usercredentials80.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\usercredentials80.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\barcodescanner80.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\barcodescanner80.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\rfidsignal80.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\rfidsignal80.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\rope96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\rope96.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\sewing_tape_measure96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\sewing_tape_measure96.png"
+    },
+    {
         "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\ic_launcher.png",
         "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\ic_launcher.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\poste.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\poste.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\delete96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\delete96.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\mechanicalspring80.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\mechanicalspring80.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\camera80.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\camera80.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\cnel.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\cnel.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\poste_taken.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\poste_taken.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\add_column96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\add_column96.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\rfidsensor80.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\rfidsensor80.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\question_mark96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\question_mark96.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\rfidsignal100.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\rfidsignal100.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\checkmark.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\checkmark.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\product96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\product96.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\data_pending96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\data_pending96.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\downloadfromftp96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\downloadfromftp96.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\save96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\save96.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\barcode.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\barcode.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\cablerelease96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\cablerelease96.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\tags80.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\tags80.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\rj4580.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\rj4580.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\questions96.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\questions96.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\organization80.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\organization80.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\editproperty100.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\editproperty100.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\connection_sync100.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\connection_sync100.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\uploadtoftp100.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\uploadtoftp100.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\delete80.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\delete80.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\finalizar.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\finalizar.png"
+    },
+    {
+        "merged": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\build\\intermediates\\res\\merged\\debug\\drawable-xhdpi\\rope96_taken.png",
+        "source": "D:\\Users\\razerjon24\\AndroidProjects\\Etiquetador\\app\\src\\main\\res\\drawable-xhdpi\\rope96_taken.png"
     }
 ]

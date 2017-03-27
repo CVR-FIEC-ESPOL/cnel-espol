@@ -5,18 +5,28 @@ public class Cable {
     private String tagid;
     private String tipo;
     private String uso;
-    private boolean escable;
-    private String operadora;
+    private int escable;
+    private int operadora;
+    private int nhilos;
+    private int npares;
+    private String operadora_name;
 
-    public Cable(String tagid, String tipo, String uso, boolean escable, String operadora){
+    public Cable(String tagid, String tipo, String uso, int escable, int operadora, int nhilos, int npares, String operadora_name){
         this.tagid = tagid;
         this.tipo = tipo;
         this.uso = uso;
         this.escable = escable;
         this.operadora = operadora;
+        this.nhilos = nhilos;
+        this.npares = npares;
+        this.operadora_name = operadora_name;
     }
 
-    public boolean isEscable() {
+    public String getOperadora_name() {
+        return operadora_name;
+    }
+
+    public int isEscable() {
         return escable;
     }
 
@@ -24,7 +34,7 @@ public class Cable {
         return tagid;
     }
 
-    public String getOperadora() {
+    public int getOperadora() {
         return operadora;
     }
 
@@ -36,11 +46,19 @@ public class Cable {
         return uso;
     }
 
-    public void setEscable(boolean escable) {
+    public int getNhilos() {
+        return nhilos;
+    }
+
+    public int getNpares() {
+        return npares;
+    }
+
+    public void setEscable(int escable) {
         this.escable = escable;
     }
 
-    public void setOperadora(String operadora) {
+    public void setOperadora(int operadora) {
         this.operadora = operadora;
     }
 
@@ -54,5 +72,17 @@ public class Cable {
 
     public void setUso(String uso) {
         this.uso = uso;
+    }
+
+    public void setNhilos(int nhilos) {
+        this.nhilos = nhilos;
+    }
+
+    public void setNpares(int npares) {
+        this.npares = npares;
+    }
+
+    public void setOperadora_name(String operadora_name) {
+        this.operadora_name = operadora_name;
     }
 }
