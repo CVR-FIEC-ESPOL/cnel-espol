@@ -8,24 +8,113 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="@color/blue"
     tools:context="com.trimble.etiquetador.Menu">
 
-    <Button
-        android:text="Medir"
+    <ImageButton
         android:onClick="iniciarMedicion"
+        android:background="@drawable/sewing_tape_measure96"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="10dp"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/medir"
+        android:layout_marginRight="20dp" />
+
+    <TextView
+        android:text="Medir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="118dp"
-        android:id="@+id/medir" />
+        android:layout_below="@id/medir"
+        android:typeface="monospace"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_centerHorizontal="true"/>
 
-    <Button
+    <ImageButton
+        android:onClick="postesPendientes"
+        android:background="@drawable/data_pending96"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="120dp"
+        android:layout_marginLeft="30dp"
+        android:id="@+id/button2"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="20dp"/>
+
+    <TextView
+        android:text="Pendientes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button2"
+        android:layout_marginLeft="15dp"
+        android:typeface="monospace"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        />
+
+    <ImageButton
+        android:layout_marginRight="30dp"
+        android:onClick="postesFinalizados"
+        android:background="@drawable/product96"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignTop="@+id/button2"
+        android:layout_alignParentRight="true"
+        android:id="@+id/button3" />
+
+    <TextView
+        android:text="Finalizados"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/button3"
+        android:layout_alignParentRight="true"
+        android:typeface="monospace"
+        android:textColor="@color/white"
+        android:layout_marginRight="10dp"
+        android:textSize="15sp"/>
+
+    <ImageButton
+        android:onClick="transferirDatos"
+        android:background="@drawable/uploadtoftp100"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="260dp"
+        android:layout_marginLeft="30dp"
+        android:id="@+id/transferir"
+        android:layout_alignParentLeft="true"
+        android:layout_marginRight="20dp"/>
+
+    <TextView
         android:text="Transferir"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="89dp"
-        android:id="@+id/transferir"
-        android:layout_below="@+id/medir"
-        android:layout_centerHorizontal="true" />
+        android:layout_below="@id/transferir"
+        android:layout_marginLeft="15dp"
+        android:typeface="monospace"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        />
+
+    <ImageButton
+        android:onClick="sincronizarDatos"
+        android:background="@drawable/downloadfromftp96"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignTop="@+id/transferir"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="30dp"
+        android:id="@+id/sincronizar" />
+
+    <TextView
+        android:text="Sincronizar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/sincronizar"
+        android:typeface="monospace"
+        android:textColor="@color/white"
+        android:textSize="15sp"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="10dp"/>
+
 </RelativeLayout>

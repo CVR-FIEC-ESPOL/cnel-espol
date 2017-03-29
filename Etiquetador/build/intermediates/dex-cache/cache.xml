@@ -3,6 +3,15 @@
 
     <item
         is-multidex="false"
+        jar="C:\Users\razerjon24\.gradle\caches\modules-2\files-2.1\cz.msebera.android\httpclient\4.3.6\526a9f794eab830eae4f23a62c572878b3f491ab\httpclient-4.3.6.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="526a9f794eab830eae4f23a62c572878b3f491ab">
+        <dex dex="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\pre-dexed\debug\httpclient-4.3.6_2bb0b7772968893ba5c37059528d41f38848ab3d.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="C:\Users\razerjon24\.gradle\caches\modules-2\files-2.1\com.google.code.gson\gson\2.8.0\c4ba5371a29ac9b2ad6129b1d39ea38750043eff\gson-2.8.0.jar"
         jumboMode="true"
         optimize="true"
@@ -12,11 +21,20 @@
     </item>
     <item
         is-multidex="false"
+        jar="C:\Users\razerjon24\.gradle\caches\modules-2\files-2.1\com.loopj.android\android-async-http\1.4.9\386a4339ffe52d5d63e80f9bed8d2b1d1a418249\android-async-http-1.4.9.jar"
+        jumboMode="true"
+        optimize="true"
+        revision="23.0.2"
+        sha1="386a4339ffe52d5d63e80f9bed8d2b1d1a418249">
+        <dex dex="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\pre-dexed\debug\android-async-http-1.4.9_26a47bd24c8a6306220cb2a685f3d7e9a31fed67.jar" />
+    </item>
+    <item
+        is-multidex="false"
         jar="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\incremental-runtime-classes\debug\instant-run.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="9b3dab26a4a692e22ec4e4cd1cd3e3ad0c784f41">
+        sha1="658ee910d562487f18d95ff092984b2a933ba8d0">
         <dex dex="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\pre-dexed\debug\instant-run_b8c51e885eaea4cfb28f343ad0818d7aa06676d1.jar" />
     </item>
     <item
@@ -30,20 +48,11 @@
     </item>
     <item
         is-multidex="false"
-        jar="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\exploded-aar\com.journeyapps\zxing-android-embedded\3.0.2\jars\classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
-        sha1="744a4b394a9a7db8a4c4680836d8544802a9cd64">
-        <dex dex="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\pre-dexed\debug\com.journeyapps-zxing-android-embedded-3.0.2_ccfce29ccc321bb6ccd2decbf8b86820de3e1d90.jar" />
-    </item>
-    <item
-        is-multidex="false"
         jar="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\incremental-classes\debug\instant-run-bootstrap.jar"
         jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="bb385f9ad426c7f96087ca99ad65124f86c97f0a">
+        sha1="4faa32559d6da0b9db71cd2439173ed49bfc39ea">
         <dex dex="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\pre-dexed\debug\instant-run-bootstrap_34c0048bb39ef7c7b6ca845d4485d42f8f3889a1.jar" />
     </item>
     <item
@@ -57,12 +66,12 @@
     </item>
     <item
         is-multidex="false"
-        jar="C:\Users\razerjon24\.gradle\caches\modules-2\files-2.1\com.google.zxing\core\3.2.0\e019d15a13a9786f881141d2df6654b8510bce8b\core-3.2.0.jar"
-        jumboMode="false"
+        jar="D:\Program Files\Android\Android Studio\gradle\m2repository\commons-io\commons-io\2.4\commons-io-2.4.jar"
+        jumboMode="true"
         optimize="true"
         revision="23.0.2"
-        sha1="e019d15a13a9786f881141d2df6654b8510bce8b">
-        <dex dex="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\pre-dexed\debug\core-3.2.0_d88138c0a6a2b0f7d07909aabc39091c758d22c3.jar" />
+        sha1="b1b6ea3b7e4aa4f492509a4952029cd8e48019ad">
+        <dex dex="D:\Users\razerjon24\AndroidProjects\Etiquetador\app\build\intermediates\pre-dexed\debug\commons-io-2.4_220d07371c8ef5df5888ad0e2110f48c4d26718f.jar" />
     </item>
 
 </items>

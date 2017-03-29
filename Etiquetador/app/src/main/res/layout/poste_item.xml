@@ -6,6 +6,8 @@
 
     <TextView
         android:text="TextView"
+        android:typeface="monospace"
+        android:textSize="16sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/viewcodigo"
@@ -13,6 +15,8 @@
 
     <TextView
         android:text="TextView"
+        android:textSize="16sp"
+        android:typeface="monospace"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/viewsector"

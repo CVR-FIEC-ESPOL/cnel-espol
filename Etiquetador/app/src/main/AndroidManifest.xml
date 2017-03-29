@@ -11,14 +11,20 @@
     <uses-permission android:name="com.trimble.mcs.permission.ACCESS_FLASHLIGHT" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_GPS" />
     <uses-permission android:name="android.permission.ACCESS_LOCATION" />
+    <uses-permission android:name="com.trimble.mcs.rfid.ACCESS_RFID" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
-        android:icon="@drawable/ic_launcher"
+        android:icon="@drawable/cnel"
         android:label="Etiquetador">
         <uses-library
             android:name="com.trimble.mcs"
@@ -35,18 +41,49 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ListadoPostes" />
-        <activity android:name=".Menu" />
-        <activity android:name=".AddPoste" />
+        <activity
+            android:name=".ListadoPostes"
+            android:label="Nueva Medición"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".Menu"
+            android:label="Menú" />
         <activity
             android:name=".InfoPoste"
+            android:label="Mediciones Poste"
             android:windowSoftInputMode="stateHidden" />
         <activity android:name=".CaptureActivityPortrait" />
         <activity android:name=".ConfirmationActivity" />
-        <activity android:name=".RegistrarCable" />
-        <activity android:name=".PostesPendientes" />
-        <activity android:name=".RegistrarPoste" />
-        <activity android:name=".ListadoRepetidos"></activity>
+        <activity
+            android:name=".RegistrarCable"
+            android:label="Características" />
+        <activity
+            android:name=".PostesPendientes"
+            android:label="Postes Pendientes" />
+        <activity
+            android:name=".RegistrarPoste"
+            android:label="Registrar Nuevo Poste" />
+        <activity
+            android:name=".ListadoRepetidos"
+            android:label="Postes Registrados" />
+        <activity
+            android:name=".listaFinalizados"
+            android:label="Postes Finalizados" />
+        <activity
+            android:name=".RfidActivity"
+            android:label="Verificar Tags" />
+        <activity
+            android:name=".ListadoCables"
+            android:label="Caracterizar Poste"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".Fotos_Trimble"
+            android:label="Imágenes" />
+        <activity
+            android:name=".Transferir"
+            android:hardwareAccelerated="false"
+            android:label="Transfiriendo postes" />
+        <activity android:name=".Sincronizar"></activity>
     </application>
 
 </manifest>

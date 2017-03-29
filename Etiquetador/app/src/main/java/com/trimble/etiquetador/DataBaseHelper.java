@@ -67,20 +67,23 @@ public class DataBaseHelper extends SQLiteOpenHelper {
      * Check if the database already exist to avoid re-copying the file each time you open the application.
      * @return true if it exists, false if it doesn't
      */
-    private boolean checkDataBase(){
+    private boolean checkDataBase() {
 
         SQLiteDatabase checkDB = null;
 
-        try{
+        try {
             String myPath = DB_PATH + DB_NAME;
             checkDB = SQLiteDatabase.openDatabase(myPath, null, SQLiteDatabase.OPEN_READONLY);
 
-        }catch(SQLiteCantOpenDatabaseException e){
+        } catch (SQLiteCantOpenDatabaseException e) {
             //database does't exist yet.
-            Log.w("Database","Database doesn't exist yet");
+            Log.w("Database", "Database doesn't exist yet");
 
-        }catch (SQLiteException e){
-            Log.w("Database",e.getMessage());
+        } catch (SQLiteException e) {
+            Log.w("Database", e.getMessage());
+
+        } catch (Exception e){
+            Log.w("Database", e.getMessage());
         }
 
         if(checkDB != null){
