@@ -95,7 +95,7 @@
       </div>
     </div>
 
-    <div id="myModal" class="modal fade" role="dialog">
+    <div id="pole_modal" class="modal fade" role="dialog">
       <div class="modal-dialog">
         <!-- Modal content-->
         <div class="modal-content">
@@ -117,40 +117,15 @@
               </div>
               <div class="modal-checkboxes column-flex col-md-6">
                 <h5 style="margin-top: 5px;">Tags disponibles</h5>
-                <div class="">
-                  <ul class="list-group">
-                    <li class="list-group-item">
-                      <div class="checkbox">
-                        <label><input type="checkbox" value="" checked>Tag 1</label>
-                      </div>
-                    </li>
-                    <li class="list-group-item">
-                      <div class="checkbox">
-                        <label><input type="checkbox" value="">Tag 2 </label>
-                      </div>
-                    </li>
-                    <li class="list-group-item">
-                      <div class="checkbox">
-                        <label><input type="checkbox" value="">Tag 3</label>
-                      </div>
-                    </li>
-                    <li class="list-group-item">
-                      <div class="checkbox">
-                        <label><input type="checkbox" value="">Tag 4</label>
-                      </div>
-                    </li>
-                    <li class="list-group-item">
-                      <div class="checkbox">
-                        <label><input type="checkbox" value="">Tag Virtual</label>
-                      </div>
-                    </li>
+                <form id="tags_form" name="tags_form" method="post" action="/save_tags" role="form"  class="form-horizontal">
+                  <ul id="tags-list" class="list-group">
                   </ul>
-                </div>
+                </form>
               </div>
             </div>
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Aceptar</button>
+            <button type="submit" form="tags_form" class="btn btn-primary">Aceptar</button>
             <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
           </div>
         </div>

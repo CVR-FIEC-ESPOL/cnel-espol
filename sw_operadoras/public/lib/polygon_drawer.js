@@ -44,6 +44,7 @@ Drawer.prototype.add_polygon_vertex = function(location){
 }
 
 Drawer.prototype.on_select_pole = function(){
+	console.log("single marker active");
 	var current_state = new SingleMarker();
 	this.set_state(current_state);
 	this.state.do_action(this);

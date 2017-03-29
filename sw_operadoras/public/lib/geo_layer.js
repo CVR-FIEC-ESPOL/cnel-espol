@@ -89,7 +89,7 @@ PoleOverlay.prototype.project = function(topLeft,data){
 	while (len--) {
 	  var entry = data[len];
 	  //var value = entry.valueField;
-	  var latlng = new google.maps.LatLng(entry['lat'], entry['lng']);
+	  var latlng = new google.maps.LatLng(entry['LAT'], entry['LNG']);
 	  // we don't wanna render points that are not even on the map ;-)
 	  if (!bounds.contains(latlng)) {
 	    continue;
@@ -105,7 +105,7 @@ PoleOverlay.prototype.project = function(topLeft,data){
 PoleOverlay.prototype.draw_pole = function(object_id){
   //console.log(this.svg.select('#object_id')[0]);
   d3.selectAll("circle").each( function(d, i){
-    if(d.value['object_id'] == object_id){
+    if(d.value['OBJECT_ID'] == object_id){
       d3.select(this).attr({ fill: "blue", r: 5 });
     }
   });
@@ -114,7 +114,7 @@ PoleOverlay.prototype.draw_pole = function(object_id){
 PoleOverlay.prototype.delete_pole = function(object_id){
   //console.log(this.svg.select('#object_id')[0]);
   d3.selectAll("circle").each( function(d, i){
-    if(d.value['object_id'] == object_id){
+    if(d.value['OBJECT_ID'] == object_id){
       d3.select(this).attr({ fill: "#ff6961", r: 5 });
     }
   });
@@ -157,32 +157,31 @@ PoleOverlay.prototype.draw_points = function(scale){
     .data(d3.entries(this.data))
     .enter().append("circle")
     .attr("data-id",function(pole){
-      return pole.value['object_id'];
+      return pole.value['OBJECT_ID'];
     })
     .attr("class", "marker")
     .attr('cx',function(d) {
-      latlng = new google.maps.LatLng(d.value['lat'], d.value['lng']);
+      latlng = new google.maps.LatLng(d.value['LAT'], d.value['LNG']);
       d = projection.fromLatLngToDivPixel(latlng);
       return d.x-sw.x;
     })
     .attr('cy',function(d) {
-      latlng = new google.maps.LatLng(d.value['lat'], d.value['lng']);
+      latlng = new google.maps.LatLng(d.value['LAT'], d.value['LNG']);
       d = projection.fromLatLngToDivPixel(latlng);
       return d.y-ne.y;
     })
     .attr("r",5)
     .attr("fill",function(pole){ 
       if (window.sessionStorage) {
-        var id = pole.value['object_id']
-        var pole_saved = sessionStorage.getItem(id);
+        var id = String(pole.value['OBJECT_ID']);
+        var poles = JSON.parse(sessionStorage.getItem("poles"));
+        var pole_saved = poles[id];
         if(pole_saved){
           return '#0000ff';
         }
       }
       return '#ff6961';
     });
-
-
 }
 
 PoleOverlay.prototype.update = function() {

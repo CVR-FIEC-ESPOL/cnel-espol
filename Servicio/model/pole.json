@@ -1,6 +1,6 @@
 {
-	"poste_id" : "abc12345457",
-	"poste_objectid" : 123,
+	"uuid" : "74863325-5348-4835-85b0-ce9c02c92aab",
+	"poste_objectid" : 104552,
 	"poste_codigo" : "p1234c" ,
 	"ncables" : 20,
 	"coord_x" : 100,
@@ -10,22 +10,26 @@
 	"taps_count" : 0,
 	"cables": [
 		{
-			"tag": 107, 
+			"tag_id": 109, 
 			"rfid": "RFID:PIRATA107", 
-			"poste_id": "{28EF9808-A009-4529-87CE-0C51D0848B38}", 
-			"operadora_id": 5, 
+			"poste_id": "74863325-5348-4835-85b0-ce9c02c92aab", 
+			"operadora": -1, 
 			"tipo": "FIBRA", 
-			"cable_o_equipo": "CABLE",
-			"uso":"ACOMETIDA"
+			"es_cable": 1 ,
+			"uso":"ACOMETIDA",
+			"n_hilos": 0,
+			"dimension": "0"
 		},
 		{
-			"tag": 108, 
+			"tag_id": 110, 
 			"rfid": "RFID:PIRATA108", 
-			"poste_id": "{28EF9808-A009-4529-87CE-0C51D0848B38}", 
-			"operadora_id": 8, 
+			"poste_id": "74863325-5348-4835-85b0-ce9c02c92aab", 
+			"operadora": -1, 
 			"tipo": "FIBRA", 
-			"cable_o_equipo": "CABLE",
-			"uso":"ACOMETIDA"
+			"es_cable": 1,
+			"uso":"ACOMETIDA",
+			"n_hilos": 0,
+			"dimension": "0"
 		}
 	]
 }

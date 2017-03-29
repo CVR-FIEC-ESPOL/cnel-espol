@@ -39,11 +39,12 @@ exports.get_poles = function(req, res){
     'lat2' : req.params.lat2,
     'long2' : req.params.long2
   }
+  var connection = req.connection;
 
-  db.select_poles(bounding_box,wgs84_code,gmap_latlon_code)
+  db.select_poles(connection,bounding_box,wgs84_code,gmap_latlon_code)
   .then(function(poles){
     rows = []
-    console.log(poles);
+    //console.log(poles);
     res.json(poles);
   },function(err){
     if(err){
@@ -55,7 +56,6 @@ exports.get_poles = function(req, res){
 }
 
 exports.get_poles_with_tags = function(req, res){
-  console.log(req.params);
   let wgs84_code = 32717;
   let gmap_latlon_code = 8307;
   var bounding_box = {
@@ -65,11 +65,13 @@ exports.get_poles_with_tags = function(req, res){
     'long2' : req.params.long2
   }
 
-  db.select_poles_with_tags(bounding_box,wgs84_code,gmap_latlon_code)
+  var connection = req.connection;
+
+  db.select_poles_with_tags(connection,bounding_box,wgs84_code,gmap_latlon_code)
   .then(function(poles){
     rows = []
-    console.log(poles);
-    res.end();
+    console.log("poles",poles);
+    res.json(poles);
   },function(err){
     if(err){
       console.error(err.message);
@@ -88,12 +90,11 @@ exports.save_pole = function(req, res){
   for(var i in poste['cables']){
     poste['cables'][i] = JSON.parse(poste['cables'][i]);
   }
-
-  console.log(poste);
   
-  db.save_pole(poste)
-  .then(function(){
-    res.status(404);
+  console.log(poste);
+  var connection = req.connection;
+  db.save_pole(connection,poste).then(function(){
+    res.status(200);
     res.end();
   })
   .catch(function(err){
@@ -113,11 +114,23 @@ exports.save_photo = function(req, res){
 
 
 exports.get_postes_extras = function(req,res){
-  db.select_pole_extras().then(function(pole_extras){
+  var connection = req.connection;
+  db.select_pole_extras(connection).then(function(pole_extras){
     console.log(pole_extras);
     res.json(pole_extras);
   },function(err){
     console.log(err);
+    res.status(404);
+    res.end();
+  });
+}
+
+
+exports.get_all_poles = function(req,res){
+  var connection = req.connection;
+  db.select_all_poles(connection).then(function(poles){
+    res.json({postes: poles});
+  },function(err){
     res.status(404);
     res.end();
   });

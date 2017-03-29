@@ -10,6 +10,7 @@ SingleMarker.prototype.do_action = function(context){
 
 	this.handler = google.maps.event.addListener(map, 'click', function(e) {
 		context.notify({ 'simple_marker_location': { 'lat': e.latLng.lat(),'lng':e.latLng.lng() } });
+		console.log(e.latLng);
 	});
 }
 

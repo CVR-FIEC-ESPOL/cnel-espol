@@ -7,6 +7,7 @@ var Promise = require('promise');
 var http = require('http');
 var bodyParser = require('body-parser');
 var session = require('express-session');
+const querystring = require('querystring');
 
 jsonfile.spaces = 4;
 
@@ -62,6 +63,8 @@ app.post('/login',function(req,res){
   if(!req.body){
     do_realease(res,404)
   }
+  console.log(req.body);
+
   var user = req.body.username;
   var password = req.body.password;
 
@@ -73,7 +76,7 @@ app.post('/login',function(req,res){
   var method = "GET";
 
   var options = {
-    uri: 'http://127.0.0.1:8020/get_user/' + user,
+    uri: 'http://127.0.0.1:8020/user/' + user,
     method: method,
     json: true,
     headers: {'Authorization': 'SharedKey ' + user + ':'  + util.build_signature(method,d,password),'Date': d}
@@ -166,10 +169,12 @@ app.get("/get_tags/:object_id",function(req,res){
     method: method,
     headers: {'Authorization': 'SharedKey ' + req.session.user  + ':' + util.build_signature(method, d,req.session.password),'Date': d}
   };
+  
+  console.log("get_tags",object_id);
 
   request(options, function (error, response, body) {
     if (!error && response.statusCode == 200) {
-      console.log(body) // Show the HTML for the Google homepage.
+      console.log(body)
       res.json(body);
     }else{
       console.log(error);
@@ -278,14 +283,74 @@ app.get('/get_poles_with_tags',function(req,res){
 
   request(options, function (error, response, body) {
       if (!error && response.statusCode == 200) {
-        var result = JSON.parse(body);
-        res.json({ 'locations' : result});
+        if(typeof body != 'undefined' && body!=null){
+          console.log(body);
+          var result = JSON.parse(body);
+          res.json({ 'locations' : result});
+        }else{
+          console.log(error);
+          res.json({});
+        }
       }else{
-        console.log(error);
+        console.log("error",error);
         res.json({});
       }
   });
 });
+
+
+app.post("/save_tags",function(req,res){
+  req.session.user = 'rodrigo';
+  req.session.password = 'castro';
+
+  var data = req.body;
+  console.log(data);
+
+  if(!data || typeof data == 'undefined'){
+    res.status(500);
+    res.end();
+  }
+
+  var object_id = data.object_id
+  var tags = data.tags;
+  console.log("tags: ",tags);
+  
+  var d = 'Tue, 05 Jul 2016 06:48:26 GMT';
+  var method = "POST";
+  var options = {
+    uri : "http://127.0.0.1:8020/tags",
+    method: method,
+    headers: {'Authorization': 'SharedKey ' + req.session.user  + ':' + util.build_signature(method, d,req.session.password),'Date': d}
+  };
+
+  var save_tag = function(object_id,tag,checked){
+    return new Promise(function(resolve,reject){
+      options.json =  { object_id: object_id , tag : tag , checked: checked };
+      request(options,function(error,response,body){
+        if (error) reject(error);
+        else resolve(body);
+      });
+    })
+  }
+
+  var promises = []
+
+  for (var i in tags){
+    var value = tags[i].value;
+    var checked = tags[i].checked;
+    promises.push(save_tag(object_id,value,checked));
+  }
+
+  Promise.all(promises).then(function(results){
+    if(results.length<0){
+      res.json({});
+    }
+    res.end();
+  },
+  function(err){
+    console.log(err);
+  });
+})
 
 var server = app.listen(5050, function () {
   var host = server.address().address;

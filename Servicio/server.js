@@ -18,25 +18,6 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-app.use(function(req,res,next){
-  //middleware para autenticar el cliente que realiza la peticion
-  db.auth(req).then(function(user_id){
-    if (user_id != null) {
-        console.log("Usuario autenticado " , user_id);
-        next();
-      } else {
-        console.error('Authentication failed!');
-        res.status(404);
-        res.end();
-      }
-  },function(err){
-    console.log(err);
-    res.status(404);
-    res.end();
-  });
-  
-});
-
 app.use('/',routes);
 
 app.get("/",function(req,res){

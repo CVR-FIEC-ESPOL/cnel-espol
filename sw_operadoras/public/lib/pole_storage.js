@@ -1,12 +1,20 @@
 var PoleStorage = function(){
 	/*cache*/
+	sessionStorage.setItem("poles",JSON.stringify({}));
 }
 
-PoleStorage.prototype.save = function(data){
+PoleStorage.prototype.save = function(id,tags){
 	if (window.sessionStorage) {
-		var id = data['object_id'];
-		var location = {'lat': data['lat'],'lng': data['lng']};
-	  	sessionStorage.setItem(id,JSON.stringify(location));
+		var poles = JSON.parse(sessionStorage.getItem("poles"));
+		if(tags.length >0){
+			for(var i in tags){
+				poles[id].push(tags[i]);
+			}
+		}else{
+			poles[id] = [];
+		}
+		console.log("saving poles",poles);
+		sessionStorage.setItem("poles",JSON.stringify(poles));
 	}
 }
 
@@ -17,15 +25,25 @@ PoleStorage.prototype.remove = function(data){
 	}
 }
 
-PoleStorage.prototype.restore = function(){
-	$("#pole-list").empty(); 
+PoleStorage.prototype.get = function(){
+	var poles = [];
 	if (window.sessionStorage) {
-		var self = this;
-		$.each(sessionStorage, function(key, value){
-			var pole_saved = JSON.parse(sessionStorage.getItem(key));
-			if(pole_saved){
-				self.add_pole_container(key,0);
-			}
-		});
+		poles = JSON.parse(sessionStorage.getItem("poles"));
 	}
+	return poles
+}
+
+PoleStorage.prototype.get_pole = function(id){
+	var poles;
+	if (window.sessionStorage) {
+		poles = JSON.parse(sessionStorage.getItem("poles"));
+		return poles[id];
+	}
+}
+
+
+PoleStorage.prototype.get_keys = function(){
+	$("#pole-list").empty(); 
+	var poles = this.get();
+	return Object.keys(poles) ;
 }

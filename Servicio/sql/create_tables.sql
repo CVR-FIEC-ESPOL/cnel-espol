@@ -11,6 +11,7 @@ declare
     operadoras_seq_name varchar2(64) := 'operadoras_seq';
     operadoras_tab_name varchar2(64) := 'operadoras';
     tipo_cabequip_tab_name varchar2(64) := 'tipo_cabequip';
+    na_operador varchar2(64) := 'NA';
 begin
     begin
         execute immediate 'drop table ' || cabequip_tab_name;
@@ -53,10 +54,10 @@ begin
 
     execute immediate
         'create table ' || operadoras_tab_name || '(
-             id                 number(4) not null,
-             nombre             varchar2(128),
-             desc2              varchar2(64),
-             constraint operadoras_pk primary key (id))';
+            id                 number(4) not null,
+            nombre             varchar2(128),
+            desc2              varchar2(64),
+            constraint operadoras_pk primary key (id))';
 
     execute immediate
         'create or replace trigger operadoras_bir
@@ -64,10 +65,21 @@ begin
          for each row
 
          begin
-             select ' || operadoras_seq_name || '.nextval
-             into :new.id
-             from dual;
-         end;';
+
+            if :new.nombre = ''' || na_operador ||''' 
+            then
+                select -1 into :new.id from dual;
+            else
+                select ' || operadoras_seq_name || '.nextval
+                into :new.id
+                from dual;
+            end if;
+         end;
+         ';
+
+    execute immediate
+        'insert into ' || operadoras_tab_name || ' (nombre) values (:n)' using
+            'NA';
 
     execute immediate
         'insert into ' || operadoras_tab_name || ' (nombre) values (:n)' using
@@ -120,9 +132,6 @@ begin
     execute immediate
         'insert into ' || operadoras_tab_name || ' (nombre) values (:n)' using
             'ASEGLOP';
-    execute immediate
-        'insert into ' || operadoras_tab_name || ' (nombre) values (:n)' using
-            'TC TELEVISIÓN';
     execute immediate
         'insert into ' || operadoras_tab_name || ' (nombre) values (:n)' using
             'TRANS-TELCO';
