@@ -8,55 +8,109 @@
         <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
         <link rel="stylesheet" type="text/css" href="css/normalize.css">
         <link rel="stylesheet" type="text/css" href="css/flex.css">
-        <script type="text/javascript" src="public/lib/jquery-1.11.3.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-
+        <script type="text/javascript" src="lib/jquery-1.11.3.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous">
+        </script>
         <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">
         <link rel="stylesheet" href="font-awesome/css/font-awesome.min.css"> 
         <style type="text/css">
+
             html,body{
                 height: 100%;
+                background:#f8f8f8
             }
+
+            #loginbox{
+                background:#f8f8f8;
+            }
+
+            .panel-info>.panel-heading{
+                background:#f8f8f8;
+                border: none;
+            }
+
+            .panel{
+                border: none;
+            }
+            
+            .panel-body{;
+                background:#f8f8f8
+            }
+
+            .form-control{
+                font-size: 18px;
+                width: 100%;
+                height: 50px;
+            }
+            
+            .btn{
+                font-size: 18px;
+                width: 100%;
+                height: 50px;
+            }
+
+            input::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+                color: white;
+            }
+            input::-webkit-input-placeholder { /* WebKit browsers */
+                color:    #f51;
+            }
+            input::-moz-placeholder { /* Firefox 19+ */
+                color: white;
+            }
+            input:-ms-input-placeholder { /* IE 10+ */
+                color: white;
+            }
+            input:-moz-placeholder { /* Firefox 18- */
+                color: white;
+            }
+
         </style>
+        <script type="text/javascript">
+
+            /*var promise = $.ajax({
+                dataType: "json",
+                method : "post",
+                url: "/save_pole",
+                data: {  },
+                success: function () {
+                    alert("enviado");
+                }
+            });*/
+            
+        </script>
     </head>
-    <body style="background-color: white; height: 100%;" class="row-flex align-items-center">
-        <div  style="margin-bottom: 25px"  class="container row-flex align-items-center">    
-            <div id="loginbox" class="mainbox col-md-6 col-md-offset-3 col-sm-8 col-sm-offset-2">              
-            <div class="panel panel-info" >
-                <div class="panel-heading">
-                    <div class="panel-title">Iniciar Sesión</div>
-                </div>     
+    <body style="height: 100%;" class="row-flex align-items-center">
+        <div style="margin-bottom: 25px"  class="row-flex align-items-center">    
+            <div id="loginbox" class="mainbox col-md-4 col-md-offset-4 col-sm-8 col-sm-offset-2">          
+                <div class="panel panel-info" >
+                <div class="panel-heading row-flex justify-content-center ">
+                    <img src="img/cnel_ep_2013.png" height="120" width="200">
+                </div>
                 <div style="padding-top:30px" class="panel-body" >
-                    <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12"></div>
-                        <form  id="formulario_inicio_sesion" name="formulario_inicio_sesion" method="post" action="/login" class="form-horizontal" role="form">
-                            <div style="margin-bottom: 25px" class="input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
-                                <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="usuario">                                     
-                            </div>
-                            
-                            <div style="margin-bottom: 25px" class="input-group">
-                                <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
-                                <input id="login-password" type="password" class="form-control" name="password" placeholder="contraseña">
-                            </div>
-                            
-                            <div class="input-group">
-                            
-                            <div class="checkbox">
-                                <label>
-                                  <input id="login-remember" type="checkbox" name="remember" value="1"> Remember me
-                                </label>
-                              </div>
-                            </div>
-                            
-                            <div style="margin-top:10px" class="form-group">
-                                <!-- Button -->
-                                <div class="col-sm-12 controls">
-                                  <input id="btn-login" class="btn btn-success" name="formulario_inicio_sesion" type="submit" value="Iniciar" >
-                                </div>
-                            </div>
+                    <div style="display:none" id="login-alert" class="alert alert-danger col-sm-12">
                         
-                        </form>     
-                    </div>                     
+                    </div>
+                    <form  id="formulario_inicio_sesion" name="formulario_inicio_sesion" method="post" action="/login" class="form-horizontal" role="form">
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-user"></i></span>
+                            <input id="login-username" type="text" class="form-control" name="username" value="" placeholder="usuario">                                     
+                        </div>
+                        
+                        <div style="margin-bottom: 25px" class="input-group">
+                            <span class="input-group-addon"><i class="glyphicon glyphicon-lock"></i></span>
+                            <input id="login-password" type="password" class="form-control" name="password" placeholder="contraseña">
+                        </div>
+                        
+                        <div style="margin-top:10px" class="form-group">
+                            <!-- Button -->
+                            <div class="col-md-12 col-sm-12 controls">
+                              <input id="btn-login" class="btn btn-success" name="formulario_inicio_sesion" type="submit" value="Iniciar" >
+                            </div>
+                        </div>
+                    
+                    </form>     
+                </div>                     
                 </div>  
             </div>
         </div>

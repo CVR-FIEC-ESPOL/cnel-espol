@@ -9,6 +9,23 @@ button{
   padding: 5px;
 }
 
+h1{
+  margin-bottom: 0px;
+}
+
+.user_account_icon_container{
+  padding: 0px;
+  margin-top: 8px;
+}
+
+.user_container{
+  padding: 0px;
+}
+
+.user_account_icon{
+  margin-top: 5px;
+}
+
 .select_pole_icon{
   background-image: url("../img/select_pole.png");
   background-size: cover;
@@ -220,4 +237,16 @@ h3{
 
 .map-polygon-drawer-options{
 
+}
+
+.tags-list{
+  max-height:300px;
+  overflow-y:scroll; 
+}
+
+#button_cerrar_sesion{
+  position: fixed;
+  top: 3%;
+  left: 90%;
+  z-index: 99999;
 }

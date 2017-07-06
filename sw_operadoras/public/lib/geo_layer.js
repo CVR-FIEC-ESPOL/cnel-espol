@@ -5,10 +5,19 @@ var PoleOverlay = function(map,cfg,data){
 	this.data = data;
   this.setMap(map);
   this.initialize(cfg || {});
+  this.markers = [];
   //this.observable = new Observable();
 };
 
 PoleOverlay.prototype = new google.maps.OverlayView();
+
+PoleOverlay.prototype.rebuild = function(map,cfg,locations){
+  this.map = map;
+  this.cfg = cfg;
+  this.data = locations;
+  this.setMap(this.map);
+  this.initialize(this.cfg);
+}
 
 PoleOverlay.prototype.initialize = function(cfg){
 	this.cfg = cfg;
@@ -49,7 +58,6 @@ PoleOverlay.prototype.onAdd = function() {
 
   var that = this;
   google.maps.event.addListener(this.map,'bounds_changed',function() { 
-    
     return that.update(); 
   });
   
@@ -81,6 +89,7 @@ PoleOverlay.prototype.draw = function() {
 PoleOverlay.prototype.project = function(topLeft,data){
 	var latLngPoints = [];
 	// iterate through data 
+  var bounds = this.map.getBounds();
 	var len = data.length;
 	var layerProjection = this.getProjection();
 	var layerOffset = layerProjection.fromLatLngToDivPixel(topLeft);
@@ -102,17 +111,51 @@ PoleOverlay.prototype.project = function(topLeft,data){
 	return latLngPoints;
 }
 
-PoleOverlay.prototype.draw_pole = function(object_id){
-  //console.log(this.svg.select('#object_id')[0]);
+PoleOverlay.prototype.zoom_pole = function(object_id){
+  var map = this.map
+  var self = this;
+  console.log(this.markers);
+
+  for(var i in this.markers){
+    this.markers[i].setMap(null);
+  }
+
   d3.selectAll("circle").each( function(d, i){
     if(d.value['OBJECT_ID'] == object_id){
-      d3.select(this).attr({ fill: "blue", r: 5 });
+      //alert(d.value['OBJECT_ID']);
+      var latlng = new google.maps.LatLng(d.value['LAT'], d.value['LNG']);
+      map.setCenter(latlng);
+      map.setZoom(20);
+      
+      var marker = new google.maps.Marker({
+        position: latlng,
+        map: map
+      });
+
+      self.markers.push(marker);
+
+      var infowindow = new google.maps.InfoWindow({
+        content: "<div style='overflow:hidden; font-size:8px;' > <h1> Poste " + d.value['CODE'] + "</h1></div>"
+      });
+      infowindow.open(map, marker);
+      
+      marker.addListener('click', function() {
+        
+      });
+      
+    }
+  });
+}
+
+PoleOverlay.prototype.draw_pole = function(object_id,color){
+  d3.selectAll("circle").each( function(d, i){
+    if(d.value['OBJECT_ID'] == object_id){
+      d3.select(this).attr({ fill: color, r: 5 });
     }
   });
 }
 
 PoleOverlay.prototype.delete_pole = function(object_id){
-  //console.log(this.svg.select('#object_id')[0]);
   d3.selectAll("circle").each( function(d, i){
     if(d.value['OBJECT_ID'] == object_id){
       d3.select(this).attr({ fill: "#ff6961", r: 5 });
@@ -177,7 +220,7 @@ PoleOverlay.prototype.draw_points = function(scale){
         var poles = JSON.parse(sessionStorage.getItem("poles"));
         var pole_saved = poles[id];
         if(pole_saved){
-          return '#0000ff';
+          return 'green';
         }
       }
       return '#ff6961';

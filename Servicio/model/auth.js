@@ -12,36 +12,37 @@ function on_fail(err){
 function on_connect(connection,req){
 	var query_promise = new Promise(function(resolve,reject){
 		var auth = req.headers['authorization'];
-		
 		if(!auth){
 			reject(new Error('Autorization field is empty'));
 		}
-
-		let matches = auth.match(/^SharedKey ([A-Za-z0-9]+):(.+)$/);
-		let user_id = matches[1];
-		let req_sig = matches[2];
+		var matches = auth.match(/^SharedKey ([A-Za-z0-9]+):(.+)$/);
+		var user_id = matches[1];
+		var req_sig = matches[2];
 
 		if(!user_id && !req_sig){
 			reject(new Error('Auth Tokens Corrupted'));
 		}
-		
 		db.select_user(connection,user_id).then(function(user){
 			var access_key = user.access_key;
-			let key = new Buffer(access_key, "base64");
-			let hmac = crypto.createHmac("sha256", key);
-			let inputvalue = security_utils.build_canonicalized_string(req);
+			var key = new Buffer(access_key, "base64");
+			var hmac = crypto.createHmac("sha256", key);
+			var inputvalue = security_utils.build_canonicalized_string(req);
 			hmac.update(inputvalue);
-			let query_sig = hmac.digest("base64");
+			var query_sig = hmac.digest("base64");
 			if(req_sig === query_sig){
-				//console.log("user_id: ",user_id);
 				var data = {
 					connection : connection,
 					user_id : user_id
 				}
+				console.log("User " + user_id + " has been accepted for accessing to API ");
 				resolve(data);
 			}else{
+				console.log("User " + user_id + " has rejected for accessing to API ");
 				reject(new Error('User not registered in database'));
 			}
+		},function(err){
+			console.log("User " + user_id + " has rejected for accessing to API ");
+			reject(new Error('User not registered in database'));
 		});
 	});
 	return query_promise;

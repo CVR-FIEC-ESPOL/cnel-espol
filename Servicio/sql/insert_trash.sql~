@@ -1,0 +1,22 @@
+var result refcursor;
+
+exec select_poles_with_tags(32717,8307,-80.691759,-3.004036,-78.928654,-0.509060,:result);
+
+print result;
+
+
+
+var op_code NUMBER;
+
+exec delete_virtual_tag('{247F8050-1182-4D2C-8AC9-16B236C6131A}','VIRTUAL_28',:op_code);
+
+show errors;
+
+
+exec insert_cabequip('0','0000000000','{28EF9808-A009-4529-87CE-0C51D0848B38}',3,'VIRTUAL','CABLE',0,'ACOMETIDA',0);
+exec insert_cabequip('0','0000000000','{28EF9808-A009-4529-87CE-0C51D0848B38}',3,'VIRTUAL','CABLE',0,'ACOMETIDA',0);
+exec insert_cabequip('0','0000000000','{28EF9808-A009-4529-87CE-0C51D0848B38}',3,'VIRTUAL','CABLE',0,'ACOMETIDA',0);
+exec insert_cabequip('0','0000000000','{28EF9808-A009-4529-87CE-0C51D0848B38}',3,'VIRTUAL','CABLE',0,'ACOMETIDA',0);
+
+select operadora_id,tag from cabequip;
+

@@ -12,6 +12,7 @@ declare
     operadoras_tab_name varchar2(64) := 'operadoras';
     tipo_cabequip_tab_name varchar2(64) := 'tipo_cabequip';
     na_operador varchar2(64) := 'NA';
+    tags_seq_name varchar2(64) := 'tags_virtuales_seq';
 begin
     begin
         execute immediate 'drop table ' || cabequip_tab_name;
@@ -52,6 +53,10 @@ begin
     execute immediate
         'create sequence ' || operadoras_seq_name || ' start with 1';
 
+
+    execute immediate
+        'create sequence ' || tags_seq_name || ' start with 1';
+
     execute immediate
         'create table ' || operadoras_tab_name || '(
             id                 number(4) not null,
@@ -65,7 +70,6 @@ begin
          for each row
 
          begin
-
             if :new.nombre = ''' || na_operador ||''' 
             then
                 select -1 into :new.id from dual;
@@ -196,6 +200,9 @@ begin
         'insert into ' || tipo_cabequip_tab_name || ' (tipo, cable_o_equipo) values (:t, :coe)'
              using 'TAP', 'EQUIPO';
     execute immediate
+        'insert into ' || tipo_cabequip_tab_name || ' (tipo, cable_o_equipo) values (:t, :coe)'
+             using 'VIRTUAL', 'CABLE';
+    execute immediate
         'create table ' || poste_extras_tab_name || '(
              poste_id               varchar2(38) not null,
              poste_objectid         number(10) not null,
@@ -228,6 +235,16 @@ begin
              constraint cabequip_tipo_fk foreign key (tipo, cable_o_equipo)
                  references ' || tipo_cabequip_tab_name || '(tipo, cable_o_equipo),
              constraint cabequip_uso_ck check (uso in (''ACOMETIDA'', ''DISTRIBUCION'')))';
+
+     execute immediate
+	'CREATE INDEX POSTES_EXTRAS_OBJECT_ID_IDX ON POSTE_EXTRAS(poste_objectid)';
+
+     execute immediate
+	'CREATE INDEX POSTES_EXTRAS_POSTE_ID_IDX ON POSTE_EXTRAS(poste_id)';
+
+     execute inmediate
+	'CREATE INDEX CABEQUIP_TAG_IDX ON CABEQUIP(tag)';
+
 end;
 /
 

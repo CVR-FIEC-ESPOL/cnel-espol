@@ -1,0 +1,18 @@
+INSERT INTO poste_extras (poste_id, poste_objectid, poste_codigo, ncables, coord_x, coord_y) VALUES  ('{28EF9808-A009-4529-87CE-0C53D0848B38}', 97482, 'P052893', 20, 620499.67, 9763270.31);
+
+INSERT INTO poste_extras (poste_id, poste_objectid, poste_codigo, ncables, coord_x, coord_y) VALUES  ('{66666666-1182-4D2C-8DC9-16B236C6131A}', 98606, 'P116615', 100, 617830.35, 9763482.72)
+/
+
+select tag,operadora_id from cabequip where poste_id = '{28EF9808-A009-4529-87CE-0C53D0848B38}';
+exec insert_pole_auto('{247F8050-1182-4D2C-8DC9-16B236C6131A}','rodrigo',:op_code_out);
+
+var results refcursor
+BEGIN
+OPEN results FOR SELECT TAG FROM CABEQUIP WHERE POSTE_ID = '{28EF9808-A009-4529-87CE-0C53D0848B38}' and TIPO != 'VIRTUAL' and OPERADORA_ID = -1;
+END;
+
+
+var results refcursor;
+exec insert_pole_auto('{247F8050-1182-4D2C-8DC9-16B236C6131A}','rodrigo',:results,:op_code_out,:tag);
+
+exec insert_pole_auto('{28EF9808-A009-4529-87CE-0C53D0848B38}','rodrigo',:op_code_out,:tag);

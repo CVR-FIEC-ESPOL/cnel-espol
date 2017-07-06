@@ -18,10 +18,12 @@ PoleStorage.prototype.save = function(id,tags){
 	}
 }
 
-PoleStorage.prototype.remove = function(data){
+PoleStorage.prototype.remove = function(object_id){
 	if (window.sessionStorage) {
-		var id = data['object_id'];
-		sessionStorage.removeItem(id);
+		alert(object_id);
+		var poles = JSON.parse(sessionStorage["poles"]);
+		delete poles[object_id];
+		sessionStorage["poles"] = JSON.stringify(poles);
 	}
 }
 

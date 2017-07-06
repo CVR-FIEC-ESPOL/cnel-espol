@@ -40,6 +40,7 @@ Drawer.prototype.set_state = function(state){
 }
 
 Drawer.prototype.add_polygon_vertex = function(location){
+	
 	this.polygon_vertices.push(location);
 }
 
@@ -74,6 +75,7 @@ Drawer.prototype.on_search_poles = function(){
 }
 
 Drawer.prototype.on_search_location = function(){
+	var self = this;
 	var address = document.getElementById('address').value;
 	console.log(address);
 	var geocoder = new google.maps.Geocoder();
@@ -83,8 +85,6 @@ Drawer.prototype.on_search_location = function(){
 	  if (status === google.maps.GeocoderStatus.OK) {
 	    var lat = results[0].geometry.location.lat();
 	    var lng = results[0].geometry.location.lng(); 
-	    console.log(lat);
-	    console.log(lng);
 	  	self.map.setCenter(results[0].geometry.location);
 	  	/*marker.setMap(null);
 	  	marker = new google.maps.Marker({

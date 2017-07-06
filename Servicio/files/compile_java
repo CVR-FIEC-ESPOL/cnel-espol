@@ -1,0 +1,2 @@
+# javac -cp commons-io-2.5/commons-io-2.5.jar $1
+javac -cp commons-io-2.5/commons-io-2.5.jar:commons-codec-1.10/commons-codec-1.10.jar $1

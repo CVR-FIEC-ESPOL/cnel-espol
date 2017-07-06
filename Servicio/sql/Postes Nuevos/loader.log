@@ -1,0 +1,94 @@
+
+SQL*Loader: Release 11.2.0.2.0 - Production on Sun May 14 12:32:01 2017
+
+Copyright (c) 1982, 2009, Oracle and/or its affiliates.  All rights reserved.
+
+Control File:   loader.ctl
+Data File:      db_postes_nuevos.csv
+  Bad File:     db_postes_nuevos.bad
+  Discard File:  none specified
+ 
+ (Allow all discards)
+
+Number to load: ALL
+Number to skip: 0
+Errors allowed: 50
+Bind array:     64 rows, maximum of 256000 bytes
+Continuation:    none specified
+Path used:      Conventional
+
+Table POSTES_NUEVOS, loaded from every logical record.
+Insert option in effect for this table: INSERT
+
+   Column Name                  Position   Len  Term Encl Datatype
+------------------------------ ---------- ----- ---- ---- ---------------------
+ALIMENTADO                          FIRST     *   ,  O(") CHARACTER            
+ATERRAMIEN                           NEXT     *   ,  O(") CHARACTER            
+CANTON                               NEXT     *   ,  O(") CHARACTER            
+CASERIO                              NEXT     *   ,  O(") CHARACTER            
+CODIGOELEM                           NEXT     *   ,  O(") CHARACTER            
+CODIGOEMPR                           NEXT     *   ,  O(") CHARACTER            
+CODIGOESTR                           NEXT     *   ,  O(") CHARACTER            
+COMENTARIO                           NEXT     *   ,  O(") CHARACTER            
+COORD_X                              NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_number(:COORD_X, '999999990.99999999999990','NLS_NUMERIC_CHARACTERS = ''.,''')"
+COORD_Y                              NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_number(:COORD_Y, '999999990.99999999999990','NLS_NUMERIC_CHARACTERS = ''.,''')"
+ESTADO                               NEXT     *   ,  O(") CHARACTER            
+ESTRUCTURA                           NEXT     *   ,  O(") CHARACTER            
+EXISTENOVE                           NEXT     *   ,  O(") CHARACTER            
+FECHAACTIV                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_date(:FECHAACTIV, 'YY-MM-DD')"
+FECHACONST                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_date(:FECHACONST, 'YY-MM-DD')"
+FECHAMOD_1                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_date(:FECHAMOD_1, 'YY-MM-DD')"
+FECHAMODIF                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_date(:FECHAMODIF, 'YY-MM-DD')"
+FECHAREGIS                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_date(:FECHAREGIS, 'YY-MM-DD')"
+GLOBALID                             NEXT     *   ,  O(") CHARACTER            
+HIPERVINCU                           NEXT     *   ,  O(") CHARACTER            
+MIESTADO                             NEXT     *   ,  O(") CHARACTER            
+MIGUID                               NEXT     *   ,  O(") CHARACTER            
+MIOID                                NEXT     *   ,  O(") CHARACTER            
+MISUBTIPO                            NEXT     *   ,  O(") CHARACTER            
+OBJECTID                             NEXT     *   ,  O(") CHARACTER            
+OBSERVACIO                           NEXT     *   ,  O(") CHARACTER            
+PARROQUIA                            NEXT     *   ,  O(") CHARACTER            
+PROPIEDAD                            NEXT     *   ,  O(") CHARACTER            
+PROVINCIA                            NEXT     *   ,  O(") CHARACTER            
+PROYECTOCO                           NEXT     *   ,  O(") CHARACTER            
+PROYECTOMO                           NEXT     *   ,  O(") CHARACTER            
+PUESTOATIE                           NEXT     *   ,  O(") CHARACTER            
+ROTACIONSI                           NEXT     *   ,  O(") CHARACTER            
+    SQL string for column : "to_number(:ROTACIONSI, '999999990.99999999999990','NLS_NUMERIC_CHARACTERS = ''.,''')"
+SUBTIPO                              NEXT     *   ,  O(") CHARACTER            
+TEXTOETIQU                           NEXT     *   ,  O(") CHARACTER            
+TIPOCIMIEN                           NEXT     *   ,  O(") CHARACTER            
+TIPOUSOPOS                           NEXT     *   ,  O(") CHARACTER            
+USUARIOMOD                           NEXT     *   ,  O(") CHARACTER            
+USUARIOREG                           NEXT     *   ,  O(") CHARACTER            
+
+value used for ROWS parameter changed from 64 to 25
+
+Table POSTES_NUEVOS:
+  150765 Rows successfully loaded.
+  0 Rows not loaded due to data errors.
+  0 Rows not loaded because all WHEN clauses were failed.
+  0 Rows not loaded because all fields were null.
+
+
+Space allocated for bind array:                 251550 bytes(25 rows)
+Read   buffer bytes: 1048576
+
+Total logical records skipped:          0
+Total logical records read:        150765
+Total logical records rejected:         0
+Total logical records discarded:        0
+
+Run began on Sun May 14 12:32:01 2017
+Run ended on Sun May 14 12:34:22 2017
+
+Elapsed time was:     00:02:21.37
+CPU time was:         00:00:04.81

@@ -2,7 +2,6 @@ var express = require('express');
 var app = express();
 var jsonfile = require('jsonfile');
 var fs = require("fs");
-var oracledb = require('oracledb');
 var _ = require('underscore');
 var q = require('q');
 
@@ -12,8 +11,12 @@ var db = require('./model/model.js');
 var Promhise = require('promise');
 
 var routes=require('./router.js');
+
+process.env.UV_THREADPOOL_SIZE = 10; // This will work
+
+app.use(express.static('./controller/img'));
 app.use(express.static('./public'));
-app.use( bodyParser.json() );       // to support JSON-encoded bodies
+app.use(bodyParser.json() );       // to support JSON-encoded bodies
 app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
@@ -29,3 +32,5 @@ var server = app.listen(8020, function () {
   var port = server.address().port
   console.log("CNEL service listening at http://%s:%s", host, port)
 })
+
+

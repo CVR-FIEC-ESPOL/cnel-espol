@@ -5,13 +5,34 @@ var crypto = require('crypto');
 var fs = require("fs");
 var app_auth = require('./auth.js')
 
-var oracle_config = {
-  user          : "system",
-  password      : "2487",
-  connectString : "localhost/XE"
-}
+oracledb.Promise = Promise;
 
-var connection_promise = oracledb.getConnection(oracle_config);
+
+var oracle_config = {
+	user          : "system",
+  	password      : "2487",
+  	connectString :  process.env.NODE_ORACLEDB_CONNECTIONSTRING
+	// Default values shown below
+	// externalAuth: false, // whether connections should be established using External Authentication
+	// poolMax: 4, // maximum size of the pool. Increase UV_THREADPOOL_SIZE if you increase poolMax
+	// poolMin: 0, // start with no connections; let the pool shrink completely
+	// poolIncrement: 1, // only grow the pool by one connection at a time
+	// poolTimeout: 60, // terminate connections that are idle in the pool for 60 seconds
+	// poolPingInterval: 60, // check aliveness of connection if in the pool for 60 seconds
+	// queueRequests: true, // let Node.js queue new getConnection() requests if all pool connections are in use
+	// queueTimeout: 60000, // terminate getConnection() calls in the queue longer than 60000 milliseconds
+	// poolAlias: 'myalias' // could set an alias to allow access to the pool via a name
+	// stmtCacheSize: 30 // number of statements that are cached in the statement cache of each connection
+}
+var connection_promise = null;
+
+oracledb.createPool(oracle_config,function(err, pool) {
+	console.log("creando pools");
+	connection_promise = pool.getConnection();
+    if (err) {
+        console.error("createPool() error: " + err.message);
+    }
+});
 
 exports.on_connect = function(){
    	return connection_promise;
@@ -62,15 +83,15 @@ function execute_store_procedure(connection,sql_sentence,bind_params,num_rows){
 			}else{
 				var cursor = result.outBinds.cursor;
 				var metadata = result.outBinds.cursor.metaData;
-				
 				if(cursor!=null && typeof cursor!= 'undefined'){
-					console.log("metadata: ",metadata);
 					var pagination_callback = function(poles){
 						cursor.getRows(num_rows,function(err,rows){
 							if (err) {
+								console.log(err)
 								reject(err);
 								return;
 							} else if (rows.length === 0) {
+								console.log("Terminando");
 								resolve(parse_pole(metadata,poles));
 								return;
 							}else if (rows.length > 0) {
@@ -85,7 +106,6 @@ function execute_store_procedure(connection,sql_sentence,bind_params,num_rows){
 						});
 					}
 					pagination_callback([]);
-
 				}else{
 					reject(new Error(err));
 				}
@@ -143,16 +163,32 @@ exports.select_tags = function(connection,user_id,pole_id){
 }
 
 exports.update_tag = function(connection,user_id,poste_id,tag){
-	var sql_sentence = "BEGIN update_tag(:user_id,:poste_id,:tag); END;";
+	var sql_sentence = "BEGIN update_tag(:user_id,:poste_id,:tag,:op_code); END;";
 
 	var bind_params = {
 		user_id : String(user_id),
 		poste_id : String(poste_id),
-		tag : String(tag)
+		tag : String(tag),
+		op_code: { dir:oracledb.BIND_OUT, type: oracledb.STRING }
 	}
+
 	return connection.execute(sql_sentence,bind_params);
 }
 
+exports.remove_virtual_tag = function(connection,user_id,poste_id,tag){
+	var sql_sentence = "BEGIN delete_virtual_tag(:user_id,:poste_id,:tag,:op_code); END;";
+
+	var bind_params = {
+		user_id: String(user_id),
+		poste_id : String(poste_id),
+		tag : String(tag),
+		op_code : {dir:oracledb.BIND_OUT, type: oracledb.STRING}
+	}
+
+	console.log(bind_params);
+
+	return connection.execute(sql_sentence,bind_params);
+}
 
 /*tags*/
 
@@ -165,17 +201,28 @@ exports.get_pole = function(sql_clause){
 } 
 
 function save_cabequipo(connection,data,poste_id){
-	var sql_sentence = "BEGIN insert_cabequip(:tag, :rfid, :poste_id, :operadora_id, :tipo, :cable_o_equipo, :capacidad, :uso, :dimensiones); END;"
+	var sql_sentence = "BEGIN insert_cabequip(:tag, :rfid, :poste_id, :operadora_id, :tipo, :cable_o_equipo, :capacidad, :uso, :dimensiones,:op_code); END;"
+
+	/*var ids_operadoras = [];
+	var num_operadoras = 24;
+	for(var i = 1 ; i<=num_operators; i++){
+		ids_operadoras.push(i);
+	}
+
+	if(!ids_operadoras.includes(data["operadora"]) ){
+		data["operadora"] = -1;
+	}*/
 
 	var bind_params = {
 		tag: data["tag_id"] ,
 		rfid: data["rfid"] ,
 		poste_id: poste_id ,
-		operadora_id: data["operadora"] ,
+		operadora_id: data["operadora"],
 		tipo: data["tipo"] ,
 		capacidad: data["n_hilos"] ,
 		uso: data["uso"] ,
-		dimensiones: data['dimension']
+		dimensiones: data['dimension'],
+		op_code : {dir:oracledb.BIND_OUT, type: oracledb.STRING}
 	}
 
 	if(parseInt(data["es_cable"])){
@@ -186,12 +233,12 @@ function save_cabequipo(connection,data,poste_id){
 		bind_params['cable_o_equipo'] = 'EQUIPO';
 	}
 
-	console.log(bind_params);
+	//console.log(bind_params);
 
 	return connection.execute(sql_sentence,bind_params);
 }
 
-function save_cabequips(connection,cabequips,poste_id){
+exports.save_cabequips = function(connection,cabequips,poste_id){
 	var tasks = [];
 
 	for(var i in cabequips){
@@ -199,24 +246,104 @@ function save_cabequips(connection,cabequips,poste_id){
 		tasks.push(task);
 	}
 	
-	Promise.all(tasks).then(function(results){
-		//verify results;
-		console.log("todo okey")
-		connection.commit();
-		connection.close();
-	})
-	.catch(function(err){
-		console.log(err);
-		connection.rollback();
-		connection.close();
-	});
+	return Promise.all(tasks);
 }
 
-exports.save_pole = function(connection,pole){
-	var sql_sentence = "BEGIN insert_poste_extras(:poste_id, :poste_objectid, :poste_codigo, :ncables, :coord_x, :coord_y, :mangas_count, :cajas_dispersion_count, :taps_count); END;"
-	var poste_id =  String(pole['uuid'])
-	console.log(poste_id);
 
+exports.save_false_pole = function(connection,poste_id,object_id){
+	var sql_sentence = "BEGIN insert_poste_extras(:poste_id, :poste_objectid, :poste_codigo, :ncables, :coord_x, :coord_y, :mangas_count, :cajas_dispersion_count, :taps_count,:op_code, :poste_id_out); END;"
+
+	var bind_params = {
+		poste_id :  poste_id,
+		poste_objectid : object_id,
+		poste_codigo : '-1',
+		ncables : 1,
+		coord_x : 0,
+		coord_y : 0,
+		mangas_count : 0,
+		cajas_dispersion_count : 0,
+		taps_count : 0,
+		op_code: { type: oracledb.STRING, dir : oracledb.BIND_OUT},
+		poste_id_out : { type: oracledb.STRING, dir : oracledb.BIND_OUT}
+	}
+	
+	return connection.execute(sql_sentence,bind_params);
+
+}
+
+exports.save_pole_auto = function(connection,poste_id,user_id){
+	var sql_sentence = "BEGIN insert_pole_auto(:poste_id,:user_id,:op_code); END;"
+
+	var bind_params = {
+		poste_id : poste_id,
+		user_id : user_id,
+		op_code: { type: oracledb.STRING, dir : oracledb.BIND_OUT},
+
+	}
+
+	return connection.execute(sql_sentence,bind_params);
+}
+
+var set_pole = function(connection,pole){
+	var sql_sentence = "BEGIN update_poste_extras(:poste_id, :ncables, :coord_x, :coord_y, :mangas_count, :cajas_dispersion_count, :taps_count,:op_code); END;"
+	var bind_params = {
+		poste_id :  String(pole['uuid']),
+		ncables : parseInt(pole['ncables']),
+		coord_x : parseFloat(pole['x']),
+		coord_y : parseFloat(pole['y']),
+		mangas_count : parseInt(pole['nmangas']),
+		cajas_dispersion_count :parseInt(pole['ncdd']),
+		taps_count : parseInt(pole['ntaps']),
+		op_code : { type: oracledb.STRING, dir : oracledb.BIND_OUT}
+	}
+	return connection.execute(sql_sentence,bind_params);
+}
+
+exports.update_pole = function(connection,pole,cabequips){
+	var sql_sentence = "BEGIN delete_tags(:poste_id,:op_code) ; END;";
+	
+	var poste_id = String(pole['uuid']);
+	
+	var bind_params = {
+		poste_id : poste_id,
+		op_code: { type: oracledb.STRING, dir : oracledb.BIND_OUT }
+	}
+	
+	var query_promise = new Promise(function(resolve,reject){
+		connection.execute(sql_sentence,bind_params).then(function(result){
+			var op_code = result.outBinds.op_code;
+			if(op_code == 'OK'){
+				console.log("Tags Borrados");
+				set_pole(connection,pole).then(function(result){
+					var op_code2 = result.outBinds.op_code;
+					console.log("Poste Actualizado ",poste_id);
+					if(op_code2 == 'OK'){
+						resolve({op_code : 'OK'})
+						return
+					}else{
+						reject({})
+					}
+				},function(err){
+					console.log(err);
+					reject(err);
+				});
+				return
+			}else{
+				reject({})
+			}
+		},function(err){
+			console.log(err);
+			reject(err)
+		});
+	});
+
+	return query_promise; 
+}
+
+
+exports.save_pole = function(connection,pole){
+	var sql_sentence = "BEGIN insert_poste_extras(:poste_id, :poste_objectid, :poste_codigo, :ncables, :coord_x, :coord_y, :mangas_count, :cajas_dispersion_count, :taps_count,:op_code,:poste_id_out); END;"
+	
 	var bind_params = {
 		poste_id :  String(pole['uuid']),
 		poste_objectid : parseInt(pole['object_id']),
@@ -226,53 +353,39 @@ exports.save_pole = function(connection,pole){
 		coord_y : parseFloat(pole['y']),
 		mangas_count : parseInt(pole['nmangas']),
 		cajas_dispersion_count :parseInt(pole['ncdd']),
-		taps_count : parseInt(pole['ntaps'])
+		taps_count : parseInt(pole['ntaps']),
+		op_code : { type: oracledb.STRING, dir : oracledb.BIND_OUT},
+		poste_id_out : { type: oracledb.STRING, dir : oracledb.BIND_OUT}
 	}
-
-	var cabequips = pole['cables'];
-
-	connection.execute(sql_sentence,bind_params)
-	.then(function(result){
-		console.log("pole saved ",result.outBinds);
-		if(cabequips.length > 0){
-			save_cabequips(connection,cabequips,poste_id);
-		}
-		return ;
-	},function(err){
-		if (err) {
-			console.log(err);
-			connection.rollback();
-			connection.close();
-			return ;
-		} 
-	});
+	//console.log(bind_params);
+	return connection.execute(sql_sentence,bind_params);
 }
 
 exports.save_photo = function(req,res,filename){
-	let downloadfile = fs.createWriteStream(filename);
+	var downloadfile = fs.createWriteStream(filename);
 	req.pipe(downloadfile);
 	res.end();
 }
 
 exports.select_pole_by_objectid = function(connection,object_id){
-	var sql_sentence = "BEGIN select_pole_extras_by_objectid(:object_id,:poste_id,:poste_codigo); END;"
+	var sql_sentence = "BEGIN select_pole_extras_by_objectid(:object_id,:poste_id,:poste_codigo,:n_cables); END;"
 	var bind_params = {
 		object_id: parseInt(object_id),
-		poste_codigo: {dir:oracledb.BIND_OUT, type: oracledb.STRING},
-		poste_id: {dir:oracledb.BIND_OUT, type: oracledb.STRING}
+		poste_codigo: { dir:oracledb.BIND_OUT, type: oracledb.STRING },
+		poste_id: { dir:oracledb.BIND_OUT, type: oracledb.STRING },
+		n_cables: { dir:oracledb.BIND_OUT, type: oracledb.NUMBER }
 	}
 	return connection.execute(sql_sentence,bind_params);
 }
 
-
-
-exports.select_poles_with_tags = function(connection,bounding_box, src_code, dst_code){
-	bounding_box.long1 = -80.691759;
+exports.select_poles_with_tags = function(connection,user_id,bounding_box, src_code, dst_code){
+	/*bounding_box.long1 = -80.691759;
 	bounding_box.lat1 = -3.004036;
 	bounding_box.long2 = -78.928654;
-	bounding_box.lat2 = -0.509060;
-	var sql_sentence = "BEGIN select_poles_with_tags(:src_code,:dst_code,:sw_lng,:sw_lat,:ne_lng,:ne_lat,:cursor); END;"
+	bounding_box.lat2 = -0.509060;*/
+	var sql_sentence = "BEGIN select_poles_with_tags(:user_id,:src_code,:dst_code,:sw_lng,:sw_lat,:ne_lng,:ne_lat,:cursor); END;"
 	var bind_params = {
+		user_id: user_id,
 		src_code : src_code,
 		dst_code: dst_code,
 		sw_lng: parseFloat(bounding_box.long1),
@@ -285,6 +398,7 @@ exports.select_poles_with_tags = function(connection,bounding_box, src_code, dst
 }
 
 exports.select_poles = function(connection,bounding_box, src_code, dst_code){
+
 	var sql_sentence = "BEGIN select_poles(:src_code,:dst_code,:sw_lng,:sw_lat,:ne_lng,:ne_lat,:cursor); END;"
 	var bind_params = {
 		src_code : src_code,
@@ -295,7 +409,8 @@ exports.select_poles = function(connection,bounding_box, src_code, dst_code){
 		ne_lat: parseFloat(bounding_box.lat2),
 		cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT}
 	}
-	return execute_store_procedure(connection,sql_sentence,bind_params,1000);
+	console.log(bind_params);
+	return execute_store_procedure(connection,sql_sentence,bind_params,10000);
 }
 
 
@@ -315,5 +430,29 @@ exports.select_all_poles = function(connection){
 	return execute_store_procedure(connection,sql_sentence,bind_params,10000);
 }
 
+exports.select_poles_of_user = function(connection,user_id){
+	var sql_sentence = "BEGIN select_poles_of_users(:user_id,:cursor); END;";
+	var bind_params = {
+		user_id : user_id,
+		cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }
+	};
+	return execute_store_procedure(connection,sql_sentence,bind_params,100);
+}
+
+exports.select_new_poles = function(connection){
+	var sql_sentence = "BEGIN sincronize_new_poles(:cursor); END;";
+	var bind_params = {
+		cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }
+	};
+	return execute_store_procedure(connection,sql_sentence,bind_params,1000);
+}
+
+exports.select_erased_poles = function(connection){
+	var sql_sentence = "BEGIN sincronize_erased_poles(:cursor); END;";
+	var bind_params = {
+		cursor: { type: oracledb.CURSOR, dir : oracledb.BIND_OUT }
+	};
+	return execute_store_procedure(connection,sql_sentence,bind_params,1000);
+}
 
 /*poles*/

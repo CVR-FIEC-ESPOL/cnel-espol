@@ -1,0 +1,2 @@
+curl --header "" -H "Content-Type: application/json" --data @pole.json http://localhost:8020/poste/extras
+

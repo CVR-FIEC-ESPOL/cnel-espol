@@ -27,6 +27,40 @@ PoleDataManager.prototype.set_layer = function(layer){
 	this.layer = layer;
 }
 
+PoleDataManager.prototype.mark_poles = function(){
+	var self = this;
+	//marca en azul los postes que tienen al menos un tag
+	$.ajax({
+      type: 'GET',
+      url: '/get_poles_with_tags',
+      data: { 'bounding_box' : self.bounding_box },
+      success: function(results){
+        var poles = results['locations'];
+        for(var i in poles){
+        	var pole = poles[i];
+        	self.layer.draw_pole(pole['OBJECT_ID'],"blue");
+		}
+      }
+  	});
+}
+
+PoleDataManager.prototype.get_poles = function(){
+	//obtiene la lista de postes que tiene al menos un tag
+	var self = this;
+	$.ajax({    
+      type: 'GET',
+      url: '/get_poles_of_user',
+      success: function(results){
+        $("#empty-container").hide();
+        var poles = results['poles'];
+        for(var i in poles){
+        	var pole = poles[i];
+			self.add_pole_container(pole['CODE'],pole['OBJECT_ID'],pole['NUM_TAGS']);
+		}
+      }
+  	});
+}
+
 PoleDataManager.prototype.download = function(url) {
 	// obtiene informacion de los postes del servidor
 	var self = this;
@@ -40,10 +74,9 @@ PoleDataManager.prototype.download = function(url) {
 	console.log("enviado peticion");
 
 	promise.done(function(response){
-		console.log(response);
-		var poles = response['locations'];
-		self.data = poles;
-	})
+
+	});
+
 	return promise;
 };
 
@@ -54,14 +87,14 @@ PoleDataManager.prototype.upload = function(){
 PoleDataManager.prototype.update = function(data){
 	if(data!=null){
 		if('draw_polygon' in data){
-			this.polygon_region = data['region'];
+			this.polygon_region = data['draw_polygon'];
 			$('#modal_message').modal('show');
 			this.show_selected_poles(this.polygon_region);
 		}
 
 		if('region_has_changed' in data){
-			this.polygon_region = data['region'];
-			this.show_selected_poles(this.polygon_region);
+			this.polygon_region = data['draw_polygon'];
+			//this.show_selected_poles(this.polygon_region);
 		}
 
 		if('simple_marker_location' in data){
@@ -69,12 +102,13 @@ PoleDataManager.prototype.update = function(data){
 			var pole = this.get_pole(query);
 			if(pole!=null){
 				var id = pole['OBJECT_ID'];//recibir el id del poste seleccionado
+				var code = pole['CODE'];
 				if(!id || id == 'undefined'){
 					return;
 				}
-				this.layer.draw_pole(id);
+				this.layer.draw_pole(id,"green");
 				this.storage.save(id,[]);//almacena el pole marcado en la cache
-				this.add_pole_container(id,0);//agrega el pole marcado a la lista de poles
+				this.add_pole_container(code,id,0);//agrega el pole marcado a la lista de poles
 			}
 		}
 		if('disable_marker_location' in data){
@@ -83,7 +117,7 @@ PoleDataManager.prototype.update = function(data){
 			if(pole!=null){
 				var id = pole['OBJECT_ID'];//recibir el id del poste seleccionado
 				this.layer.delete_pole(id);
-				this.storage.remove(pole);//quita el pole marcado de la cache
+				this.storage.remove(pole['object_id']);//quita el pole marcado de la cache
 				this.remove_pole_container(id);//agrega el pole marcado a la lista de poles
 			}
 		}
@@ -117,28 +151,36 @@ PoleDataManager.prototype.get_pole = function(query){
 }
 
 PoleDataManager.prototype.show_selected_poles  = function(polygon){
-  var poles_selected = [];
-  var id_poles = []
-  var self = this;
+  	var self = this;
+  	var poles_objectid = [];
+
+  	$("#empty-container").html(" ");
 
 	$("#btn_mark_tags").click(function(){
 		for (var i in self.data){
 			var pole = self.data[i];
-			var latlng_obj = new google.maps.LatLng(pole.lat,pole.lng);
+			var latlng_obj = new google.maps.LatLng(pole.LAT,pole.LNG);
 			var result = google.maps.geometry.poly.containsLocation(latlng_obj, polygon);
 			if(result){
-				poles_selected.push(pole);
-				//id_poles.push(location.object_id);
-				var id = pole.object_id;
-				self.layer.draw_pole(id);
-				self.add_pole_container(id,1);
-				self.storage.save(id);
+				var id = pole['OBJECT_ID'];
+				var code = pole['CODE'];
+				self.layer.draw_pole(id,"blue");
+				self.add_pole_container(code,id,1);
+				poles_objectid.push(id);
+				//self.storage.save(id);
 			}
-			$('#modal_message').modal('hide');
 		}
-	})
-  	
-
+	
+		var promise = $.ajax({
+	  		dataType: "json",
+	  		method : "post",
+	  		url: "/save_tags_auto",
+	  		data: { 'poles' : poles_objectid }
+		});
+		
+		$('#modal_message').modal('hide');
+		//$("#tags-list").empty();
+	});
 }
 
 PoleDataManager.prototype.populate_list_poles = function(poles_tags){
@@ -147,21 +189,35 @@ PoleDataManager.prototype.populate_list_poles = function(poles_tags){
 	}
 }
 
-PoleDataManager.prototype.add_pole_container = function(pole_id,num_tag){
+PoleDataManager.prototype.add_pole_container = function(pole_code,pole_id,num_tag){
 	var pole_div = $("#pole-list").find("[data-id=" + pole_id  + "]");
 	var self = this;
 	if(pole_div.length==0){
 		var li = $("<li data-id=" + pole_id  + " class='list-group-item pole-info-item'></li>");
-		var id_container = $("<div class='pole-info-id col-md-7 row-flex justify-content-start align-items-center'></div>");
-		var id_span = $("<span>Poste N°" + pole_id  + "</span>");
+		var id_container = $("<div class='pole-info-id col-md-5 row-flex justify-content-start align-items-center'></div>");
+		var id_span = $("<span>Poste N°" + pole_code  + "</span>");
 		li.data("id",pole_id);
-		li.click(function(){
+
+		var data_id_tag =  "num_tags_" + pole_id;
+		
+		var tags_container = $("<div class='pole-info-tags col-md-6 row-flex justify-content-start align-items-center'></div>");
+		var tag_indicator = $("<span class='badge' data-id=" +  data_id_tag + " >" + num_tag + "</span> ");
+		var tag_button = $("<button class='btn btn-primary' data-toggle='modal' data-target='#pole_modal' type='button' data-id=" + pole_id  +" >Tags</button>");
+		var tag_pole_info =$("<button class='btn btn-success' type='button' data-id=" + pole_id  +" ><span class='glyphicon glyphicon-map-marker'></span></button>");
+
+		tag_pole_info.click(function(){
+			var object_id = $(this).data("id");
+			self.layer.zoom_pole(object_id); 
+		});
+
+		tag_button.click(function(){
 			var object_id = $(this).data("id");
 			self.show_info_pole(self,object_id);
 		});
-		var tags_container = $("<div class='pole-info-tags col-md-3 row-flex justify-content-start align-items-center'><button class='btn btn-primary' data-toggle='modal' data-target='#pole_modal' type='button'>Tags <span class='badge'>" + num_tag + "</span> </button></div>"); 
-		
-		console.log(li);
+
+		$(tag_button).append(tag_indicator);
+		$(tags_container).append(tag_button);
+		$(tags_container).append(tag_pole_info);
 
 		$(id_container).append(id_span);
 		$(li).append(id_container);
@@ -180,8 +236,8 @@ PoleDataManager.prototype.show_info_pole = function(self,object_id){
 	  url: "/get_tags/" + object_id,
 	  success: function(results){
 	  	var tags = 	JSON.parse(results);
+	  	alert(object_id);
 	  	if(Object.keys(tags).length === 0){
-	  		console.log("no hay tags");
 	  		self.add_tags(object_id,[]);
 	  	}else{
 	  		self.add_tags(object_id,tags);
@@ -191,7 +247,30 @@ PoleDataManager.prototype.show_info_pole = function(self,object_id){
 	  	console.log(err);
 	  }
 	});
+	$.ajax({
+		dataType: "json",
+	  	url: "/get_pole/" + object_id,
+	  	success: function(result){
+	  		var result = JSON.parse(result);
+	  		$("#pole_num_cab").html(result['n_cables']);
+	  		var poste_path = result['poste_path'];
+	  		var equipo_path = result['equipo_path'];
 
+	  		if (poste_path == "none"){
+	  			$("#pole_img").attr('src','/img/poste_default.png');
+	  		}else{
+	  			$("#pole_img").attr('src', "http://localhost:8020/" + poste_path);
+	  		}
+	  		if(equipo_path == "none"){
+	  			$("#equipo_img").attr('src','/img/equipo_default.png');
+	  		}else{
+	  			$("#equipo_img").attr('src', "http://localhost:8020/" + equipo_path);
+	  		}
+		}, 
+		error: function(err){
+	  		console.log(err);
+	  	}
+	});
 }
 
 PoleDataManager.prototype.add_tags = function(object_id,tags){
@@ -200,6 +279,7 @@ PoleDataManager.prototype.add_tags = function(object_id,tags){
 	var objectid_container = $('<input type="hidden" name="object_id" value=' +  object_id + ' >');
 	$("#tags-list").append(objectid_container);
 	var tag_container = "";
+	var is_there_tag_virtual = false;
 
 	if(tags.length > 0){
 		for(var i in tags){
@@ -212,20 +292,30 @@ PoleDataManager.prototype.add_tags = function(object_id,tags){
 			if(operadora_id == -1){
 				tag_container = "<label><input type='checkbox' name=" + name  + " value=" + tag_id + " >Tag" + tag_id + "</label>";
 			}else{
-				tag_container = "<label><input type='checkbox' name=" + name  + " value=" + tag_id + " checked >Tag" + tag_id + "</label>";
+				
+				var index = tag_id.indexOf("SN"); 
+				if(index != -1){
+					is_there_tag_virtual = true;
+					tag_container = "<label><input type='checkbox' name=" + name  + " value=" + tag_id + " checked >Tag Virtual</label>";
+				}else{
+					tag_container = "<label><input type='checkbox' name=" + name  + " value=" + tag_id + " checked >Tag" + tag_id + "</label>";
+				}
 			}
 			$(div).append(tag_container);
 			$(li).append(div);
 			$("#tags-list").append(li);
 		}
 	}
-	var li = $("<li data-id='tag_virtual' class='list-group-item'></li>");
-	var div = $("<div class='checkbox'></div>");
-	var tag_container = '<label><input type="checkbox" name="tag_virtual" value="0" >Tag Virtual</label>'
-	$(div).append(tag_container);
-	$(li).append(div);
-	$("#tags-list").append(li);
 
+	if(!is_there_tag_virtual){
+	//	alert("no hay Tag virtual");
+		var li = $("<li data-id='tag_virtual' class='list-group-item'></li>");
+		var div = $("<div class='checkbox'></div>");
+		var tag_container = '<label><input type="checkbox" name="tag_virtual" value="0" >Tag Virtual</label>'
+		$(div).append(tag_container);
+		$(li).append(div);
+		$("#tags-list").append(li);
+	}	
 }
 
 PoleDataManager.prototype.restore = function(){

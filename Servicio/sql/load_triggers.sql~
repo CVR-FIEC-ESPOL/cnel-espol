@@ -1,0 +1,14 @@
+CREATE OR REPLACE TRIGGER insert_tag_virtual
+BEFORE INSERT ON cabequip
+for each row
+BEGIN
+	IF :new.tag = '0'
+	THEN
+		select tags_virtuales_seq .nextval
+		into :new.tag from dual;
+		:new.tag :=  TO_CHAR ('SN')||'_'||:new.tag;
+	END IF;
+END;
+/
+
+

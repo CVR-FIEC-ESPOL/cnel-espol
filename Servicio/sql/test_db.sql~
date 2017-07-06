@@ -1,0 +1,4 @@
+
+
+exec insert_poste_extras('{247F8050-1182-4D2C-8DC9-16B236C6131A}', 97482, 'P052893', 30, 617830.35, 9763482.72,0,0,0,:op_code);
+show errors

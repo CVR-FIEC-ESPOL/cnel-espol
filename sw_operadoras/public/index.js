@@ -1,54 +1,109 @@
-var pole_data_manager = null;
-var drawer = null;
-var pole_overlay = null;
-
 var user = "movistar";
 var map;
 var bounds;
-var url = "/get_poles_with_tags";
 
 var config = { 
   mapTypeId: google.maps.MapTypeId.ROADMAP,
-  zoom: 17,
-  center: {lat:-2.13946802167892, lng: -79.9404153043655},
+  zoom: 18,
+  center: {lat:-2.140870, lng: -79.909108},
   dissipating: true,
   zoomControl: true
 }
 
-google.maps.event.addDomListener(window, 'load', function(){
-  map = new google.maps.Map(document.getElementById('map'),config);
 
-  bounds = new google.maps.LatLngBounds(
-    new google.maps.LatLng(-5.163956, -81.510653),
-    new google.maps.LatLng(1.696088, -74.686098));
+var Factory = function(div,config){
+  this.map = new google.maps.Map(document.getElementById(div),config);
+  this.map.setOptions({ minZoom: 16, maxZoom: 20 });
+  this.pole_data_manager = null;
+  this.drawer = null;
+  this.pole_overlay = null;
+  this.url = "/get_poles";
+}
 
-  google.maps.event.addListenerOnce(map,"bounds_changed",function() {
-    var bounding_box = get_current_bounds();
-    get_data(bounding_box,url);
+Factory.prototype.get_current_bounds = function(){
+  var ne = this.map.getBounds().getNorthEast();
+  var sw = this.map.getBounds().getSouthWest();
+
+  var bounding_box = {};
+  bounding_box['min_lat'] = sw.lat();
+  bounding_box['min_lng'] = sw.lng();
+  
+  bounding_box['max_lat']= ne.lat();
+  bounding_box['max_lng'] = ne.lng();
+  
+  return bounding_box;
+}
+
+Factory.prototype.init_factory = function(){
+  var bounding_box = this.get_current_bounds();
+  console.log(bounding_box);
+
+  if(this.pole_data_manager!=null){
+    this.pole_data_manager.set_bounding_box(bounding_box);//establece nuevo bounding box 
+  }else{
+    this.pole_data_manager = new PoleDataManager(bounding_box);//instancia pole_data_manager con las coordenas actuales
+    this.drawer = new Drawer(this.map);
+    this.drawer.add_observer(this.pole_data_manager);
+  }
+}
+
+Factory.prototype.init_overlay_map = function(locations){
+  var bounds = this.get_current_bounds();
+  console.log("bounds",bounds);
+  //this.pole_overlay = new PoleOverlay(this.map, { 'bounds': bounds }, locations);
+  if(this.pole_overlay!=null){
+    var markers = this.pole_overlay.markers;
+    this.pole_overlay = new PoleOverlay(this.map, { 'bounds': bounds }, locations);
+    this.pole_overlay.markers = markers;
+  }else{
+    this.pole_overlay = new PoleOverlay(this.map, { 'bounds': bounds }, locations);
+  }
+  this.pole_data_manager.set_layer(this.pole_overlay);
+}
+
+Factory.prototype.retrieve_pole_data = function(){
+  var self = this;
+
+  this.pole_data_manager.download(this.url).then(function(response){
+    var locations = self.parse_poles(response);
+    console.log(locations);
+    
+    self.pole_data_manager.data = locations;
+    self.init_overlay_map(locations);
+    self.pole_data_manager.get_poles();
+
+    setTimeout(function(){ 
+      self.pole_data_manager.mark_poles(); 
+    }, 1000);
+
+  },function(xhr, status, error){
+    console.log(error);
+    alert(error);
   });
+}
 
-  google.maps.event.addListener(map,'dragend',function(){
-    var bounding_box = get_current_bounds();//nuevo bounding box
-    get_data(bounding_box,url);
-  })
+Factory.prototype.parse_poles = function(response){
+  var poles = response['locations'];
+  var locations = [];
+  for(var i in poles){
+    var location = poles[i];
+    locations.push({
+      'CODE': location.CODE,
+      'OBJECT_ID': location.OBJECT_ID,
+      'LAT': parseFloat(location.LAT), 
+      'LNG': parseFloat(location.LNG)
+    });
+  }
+  return locations;
+}
 
-  $('#radio_container input:radio').click(function() {
-    if ($(this).val() === '1') {
-      bounding = get_current_bounds();
-      url = "/get_poles";
-      console.log(url);
-      get_data(bounding,url);
-    } else if ($(this).val() === '2') {
-      bounding = get_current_bounds();
-      url = "/get_poles_with_tags";
-      console.log(url);
-      get_data(bounding,url);
-    }
-  });
+Factory.prototype.save_tags = function(){
+  var self = this;
 
   $("#tags_form").on('submit', function (e) {
     var $inputs = $('#tags_form :input');
-    var d_array = [];
+    var d_array = []; var form = {}
+
     $inputs.each(function() {
       tag = {};
       tag['name'] = this.name;
@@ -57,9 +112,6 @@ google.maps.event.addDomListener(window, 'load', function(){
       d_array.push(tag);
     });
 
-    console.log(d_array);
-
-    var form = {}
     form['tags'] = []
     for(var i in d_array){
       var data = d_array[i];
@@ -74,75 +126,73 @@ google.maps.event.addDomListener(window, 'load', function(){
       url: '/save_tags', 
       data: form,
       success: function(){
-        //alert('success');
         $("#pole_modal").modal('hide');
+        var object_id = form['object_id'];
+        var id="num_tags_" + object_id;
+        var num_tags = $('#tags_form').serializeArray().length - 1;
+        $("[data-id=" + id + "]").html(num_tags);
+        switch(num_tags){
+          case 0:
+            alert('No hay tags registrados en el poste ' + form['object_id']);
+            self.pole_overlay.draw_pole(form['object_id'],"#ff6961");
+            self.pole_data_manager.storage.remove(form['object_id']);
+            self.pole_data_manager.remove_pole_container(form['object_id']);
+            break;
+          case 1:
+            alert('El Poste ' + form['object_id'] + " ha registrado un tag" );
+            self.pole_overlay.draw_pole(form['object_id'],'blue');
+            self.pole_data_manager.storage.remove(form['object_id']);
+            break;
+          default:
+            alert('El Poste ' + form['object_id'] + " ha registrado " + num_tags + " tags " );
+            self.pole_overlay.draw_pole(form['object_id'],'blue');
+            self.pole_data_manager.storage.remove(form['object_id']);
+            break;
+        }
       }
     });
     e.preventDefault();
-
   });
-  /*$('#tags_form').submit(function() {
-    //validar si no se marca nada no se debe enviar la petición post
-    
-   
-    // get all the inputs into an array.
-    var $inputs = $('#tags_form :input');
-    // not sure if you wanted this, but I thought I'd add it.
-    // get an associative array of just the values.
-    var values = {};
-    $inputs.each(function() {
-        values[this.name] = $(this).val();
+}
+
+
+google.maps.event.addDomListener(window, 'load', function(){
+  var builder = new Factory('map',config);
+  
+  google.maps.event.addListenerOnce(builder.map,"bounds_changed",function(){
+    builder.init_factory();
+    builder.retrieve_pole_data();
+  });
+
+  google.maps.event.addListener(builder.map,"dragend",function(){
+    builder.init_factory();
+    builder.retrieve_pole_data();
+  });
+
+  google.maps.event.addListener(builder.map,'zoom_changed', function() {
+    builder.init_factory();
+    builder.retrieve_pole_data();
+  });
+  
+
+  google.maps.event.addListener(builder.map, 'idle',function(){
+    builder.init_factory();
+    builder.retrieve_pole_data();
+  })
+
+  builder.save_tags();
+  
+  $("#close_session").on('click', function (e) {
+    alert("Cerrar sesion");
+    $.ajax({    
+      type: 'GET',
+      url: '/close_session',
+      success: function(results){
+        window.location.href = "/";
+      }
     });
-  });*/
-
-});
-
-function get_data(bounding_box,url){
-  if(pole_data_manager!=null){
-    pole_data_manager.set_bounding_box(bounding_box);//establece nuevo bounding box 
-  }else{
-    pole_data_manager = new PoleDataManager(bounding_box);//instancia pole_data_manager con las coordenas actuales
-    drawer = new Drawer(map);
-    console.log(drawer);
-    drawer.add_observer(pole_data_manager);
-  }
-  
-  pole_data_manager.download(url).then(function(response){
-    add_layer(parse_poles(response));
-  },function(xhr, status, error){
-    console.log(error);
   });
-  
-  pole_data_manager.restore();
 
-}
+})
 
-function get_current_bounds(){
-  var ne = map.getBounds().getNorthEast();
-  var sw = map.getBounds().getSouthWest();
-
-  var bounding_box = {};
-  bounding_box['min_lat'] = sw.lat();
-  bounding_box['min_lng'] = sw.lng();
-  
-  bounding_box['max_lat']= ne.lat();
-  bounding_box['max_lng'] = ne.lng();
-  
-  return bounding_box;
-}
-
-function parse_poles(response){
-  var poles = response['locations'];
-  var locations = [];
-  for(var i in poles){
-    var location = poles[i];
-    locations.push({'OBJECT_ID': location.OBJECT_ID ,'LAT': parseFloat(location.LAT), 'LNG': parseFloat(location.LNG)});
-  }
-  return locations;
-}
-
-function add_layer(locations){
-  pole_overlay = new PoleOverlay(map, { 'bounds': bounds }, locations);
-  pole_data_manager.set_layer(pole_overlay);
-}
 

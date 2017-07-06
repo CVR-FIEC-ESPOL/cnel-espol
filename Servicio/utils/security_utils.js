@@ -2,8 +2,7 @@
 
 
 exports.build_canonicalized_string = function(request, encoding, language, length,md5, content_type, if_mod_since, if_match,if_none_match, if_unmod_since, range){
-   let cm_date = request.headers['date'];
-
+   var cm_date = request.headers['date'];
    return request.method + "\n"
     + (encoding || '') + "\n"             /*Content-Encoding*/
     + (language || '') + "\n"             /*Content-Language*/
